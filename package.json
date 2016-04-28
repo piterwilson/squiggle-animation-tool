@@ -1,0 +1,24 @@
+{
+  "name": "squiggle-animation-tool",
+  "version": "1.0.0",
+  "description": "Open source animation educational software",
+  "main": "js/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piterwilson/squiggle-animation-tool.git"
+  },
+  "keywords": [
+    "animation",
+    "squiggle",
+    "educational"
+  ],
+  "author": "Juan Carlos Ospina Gonzalez",
+  "license": "Artistic-2.0",
+  "bugs": {
+    "url": "https://github.com/piterwilson/squiggle-animation-tool/issues"
+  },
+  "homepage": "https://github.com/piterwilson/squiggle-animation-tool#readme"
+}

@@ -1,0 +1,24 @@
+@import 'reset';
+@import 'mixins';
+
+body{
+  overflow: hidden;
+}
+
+#splash{
+  margin-left: -95px;
+  margin-top: -14px;
+  width: 190px;
+  height: 28px;
+  position: absolute;
+  top:50%;
+  left:50%;
+  background-image: url(../img/loading.png);
+  @include animation('loading 0.2s steps(3, end) infinite');
+}
+
+@include keyframes(loading) {
+    from { background-position: 0px; }
+    to { background-position: 570px; }
+}
+
