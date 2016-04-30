@@ -41,7 +41,7 @@ define(
                                               .setJerkiness(0)
                                               .setWidth(window.innerWidth)
                                               .setHeight(window.innerHeight)
-                                              .setFillColor('rgba(65,189,253,0.5)');
+                                              .setFillColor('rgba(65,189,253,0.75)');
             var fs = 18, msgw = this.__msgWindowWidth, msgh = 400, msgBackground = new RectangleView().setStrokeWeight(0)
                                               .setJerkiness(1)
                                               .setWidth(msgw)

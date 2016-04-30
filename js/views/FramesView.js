@@ -11,9 +11,10 @@ define(
             _.each([0,1,2],function(i){
               var h = window.innerHeight, w = window.innerWidth, ypos = 0, rect = new RectangleView().setWidth(AppSettings.AnimationSize.width)
                                         .setHeight(AppSettings.AnimationSize.height)
-                                        .setStrokeWeight(1)
+                                        .setStrokeWeight(2)
                                         .setJerkiness(0.5)
-                                        .setStrokeColor('#cccccc')
+                                        .setRoundedCorners(2)
+                                        .setStrokeColor('rgba(0,0,0,0.05)')
                                         .setFillColor('White');
               ypos = h/2 - AppSettings.AnimationSize.height/2;                      
               switch(i){

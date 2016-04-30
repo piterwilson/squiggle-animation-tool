@@ -55,6 +55,7 @@ define(
       * Setup function
       */
       setup : function(){
+        this.backgroundColor = "#EBF8FF";
         // setup app colors and other app-wide settings
         AppSettings.ButtonHeight = 80;
         AppSettings.UIMargin = 40;
@@ -78,18 +79,18 @@ define(
         this.dashBoardView = new DashboardView();
         this.dashBoardView.setPosition(window.innerWidth/2 - this.dashBoardView.width/2, window.innerHeight - 120).setDelegate(this);
         this.addSubview(this.dashBoardView);
-        // setup the modal view for messages
-        this.modalView = new ModalView();
-        this.addSubview(this.modalView);
-        // this.modalView.showMessage("delete frame?","yes","no",function(){
-        //   this.modalView.showMessage("bye.","Doei!");
-        // }.bind(this));
         // frames view
         this.framesView = new FramesView();
         this.addSubview(this.framesView);
         // frame counter view
         this.frameCounterView = new FrameCounterView();
         this.addSubview(this.frameCounterView);
+        // setup the modal view for messages
+        this.modalView = new ModalView();
+        this.addSubview(this.modalView);
+        this.modalView.showMessage("delete frame?","yes","no",function(){
+          this.modalView.showMessage("bye.","Doei!");
+        }.bind(this));
         // start animation
         this.model.models.push(new FrameModel());
         // add listeners
