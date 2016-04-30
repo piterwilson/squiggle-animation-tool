@@ -5,6 +5,7 @@ define(
         RectangleView = squiggle.views.primitives.Rectangle,
         Button = squiggle.views.ui.Button,
         PathView = squiggle.views.primitives.Path,
+        AppSettings = squiggle.models.AppSettings,
         DashboardView = View.extend({
           delegate : undefined,
           playButton : undefined,
@@ -17,13 +18,12 @@ define(
               [{name:"delegate", value:1}]
             );
             this.userInteractionEnabled = true;
-            var _s = 80, t, r1, r2, b1, b2, b3, xpos;
+            var _s = AppSettings.ButtonHeight, t, r1, r2, b1, b2, b3, xpos;
             xpos = 0;
             b1 = new Button().setText('')
                             .setWidth(_s)
                             .setHeight(_s);
-            this.enablePlayButton();
-            b1.getBackgroundRectangle().setRoundedCorners([_s,_s,_s,_s]);
+            b1.getBackgroundRectangle().setRoundedCorners(_s);
             t = new PathView()
               .addPoint(0,0)
               .addPoint(_s/3,_s/4)
@@ -34,28 +34,22 @@ define(
             b1.addSubview(t);
             this.addSubview(b1);
             this.playButton = b1;
-            xpos += _s + 40;
+            xpos += _s + _s + AppSettings.UIMargin;
             b2 = new Button().setText('')
                             .setWidth(_s)
                             .setHeight(_s)
-                            .setPosition(xpos, 0)
-                            .setBackgroundColorForState('#FD4141',Button.states.NORMAL)
-                            .setBackgroundColorForState('#D95050',Button.states.HOVER)
-                            .setBackgroundColorForState('#582323',Button.states.DOWN);
-            b2.getBackgroundRectangle().setRoundedCorners([_s,_s,_s,_s]);
+                            .setPosition(xpos, 0);
+            b2.getBackgroundRectangle().setRoundedCorners(_s);
             r1 = new RectangleView().setWidth(_s/2).setHeight(_s/6).setStrokeWeight(0).setFillColor("#ffffff").setPosition(_s/4,_s/2 - (_s/12));
             b2.addSubview(r1);
             this.addSubview(b2);
             this.removeFrameButton = b2;
-            xpos += _s + 20
+            xpos += _s + AppSettings.UIMargin;
             b3 = new Button().setText('')
                             .setWidth(_s)
                             .setHeight(_s)
-                            .setPosition(xpos, 0)
-                            .setBackgroundColorForState('#41FD72',Button.states.NORMAL)
-                            .setBackgroundColorForState('#50D974',Button.states.HOVER)
-                            .setBackgroundColorForState('#2A703C',Button.states.DOWN);
-            b3.getBackgroundRectangle().setRoundedCorners([_s,_s,_s,_s]);
+                            .setPosition(xpos, 0);
+            b3.getBackgroundRectangle().setRoundedCorners(_s);
             r2 = new RectangleView().setWidth(_s/2).setHeight(_s/6).setStrokeWeight(0).setFillColor("#ffffff").setPosition(_s/4,_s/2 - (_s/12));
             r3 = new RectangleView().setWidth(_s/6).setHeight(_s/2).setStrokeWeight(0).setFillColor("#ffffff").setPosition(_s/2 - (_s/12), _s/4);
             b3.addSubview(r2);
@@ -78,48 +72,48 @@ define(
                 this.delegate['onAddFramePressed']();
               }
             }.bind(this));
+            this.disableUI();
           },
           enablePlayButton : function(){
+            this.playButton.userInteractionEnabled = true;
+            this.playButton.setBackgroundColorForState(AppSettings.ButtonColorNormalBlue,Button.states.NORMAL)
+                           .setBackgroundColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER)
+                           .setBackgroundColorForState(AppSettings.ButtonColorDownBlue,Button.states.DOWN);
+          },
+          disablePlayButton : function(){
             this.playButton.userInteractionEnabled = false;
-            this.playButton.setBackgroundColorForState('#41BDFD',Button.states.NORMAL)
-            .setBackgroundColorForState('#50A9D9',Button.states.HOVER)
-            .setBackgroundColorForState('#285269',Button.states.DOWN);
+            this.playButton.setBackgroundColorForState(AppSettings.ButtonColorDisabled,Button.states.NORMAL);
           },
-          enableAddFrameButton : function(){},
-          enableRemoveButton : function(){},
-          disalePlayButton : function(){},
-          disaleAddFrameButton : function(){},
-          disaleRemoveButton : function(){},
-          mouseMoved : function(){
-            for(var index in this.subviews) {
-              var child = this.subviews[index];
-              if(child.userInteractionEnabled){
-                if(typeof(child['mouseMoved']) === "function"){
-                  child['mouseMoved'].call(this.subviews[index])
-                }
-              }
-            }
+          enableAddFrameButton : function(){
+            this.addFrameButton.userInteractionEnabled = true;
+            this.addFrameButton.setBackgroundColorForState(AppSettings.ButtonColorNormalGreen,Button.states.NORMAL)
+                           .setBackgroundColorForState(AppSettings.ButtonColorHoverGreen,Button.states.HOVER)
+                           .setBackgroundColorForState(AppSettings.ButtonColorDownGreen,Button.states.DOWN);
           },
-          mousePressed : function(){
-            for(var index in this.subviews) {
-              var child = this.subviews[index];
-              if(child.userInteractionEnabled){
-                if(typeof(child['mousePressed']) === "function"){
-                  child['mousePressed'].call(this.subviews[index])
-                }
-              }
-            }
+          disableAddFrameButton : function(){
+            this.addFrameButton.userInteractionEnabled = false;
+            this.addFrameButton.setBackgroundColorForState(AppSettings.ButtonColorDisabled,Button.states.NORMAL);
           },
-          mouseReleased : function(){
-            for(var index in this.subviews) {
-              var child = this.subviews[index];
-              if(child.userInteractionEnabled){
-                if(typeof(child['mouseReleased']) === "function"){
-                  child['mouseReleased'].call(this.subviews[index])
-                }
-              }
-            }
+          enableRemoveFrameButton : function(){
+            this.removeFrameButton.userInteractionEnabled = true;
+            this.removeFrameButton.setBackgroundColorForState(AppSettings.ButtonColorNormalRed,Button.states.NORMAL)
+                           .setBackgroundColorForState(AppSettings.ButtonColorHoverRed,Button.states.HOVER)
+                           .setBackgroundColorForState(AppSettings.ButtonColorDownRed,Button.states.DOWN);
           },
+          disableRemoveFrameButton : function(){
+            this.removeFrameButton.userInteractionEnabled = false;
+            this.removeFrameButton.setBackgroundColorForState(AppSettings.ButtonColorDisabled,Button.states.NORMAL);
+          },
+          disableUI : function(){
+            this.disablePlayButton();
+            this.disableRemoveFrameButton();
+            this.disableAddFrameButton();
+          },
+          enableUI : function(){
+            this.enablePlayButton();
+            this.enableRemoveFrameButton();
+            this.enableAddFrameButton();
+          }
         });
         return DashboardView;
   }

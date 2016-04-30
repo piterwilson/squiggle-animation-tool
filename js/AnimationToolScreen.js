@@ -5,8 +5,9 @@ define(
         Screen = squiggle.views.screens.Screen,
         AnimationModel = squiggle.models.Animation,
         RectangleView = squiggle.views.primitives.Rectangle,
+        AppSettings = squiggle.models.AppSettings,
+        ModalView = require("views/modal/ModalView"),
         AnimationToolScreen = Screen.extend({
-      curtain : undefined,
       /**
       * Animation tool options
       */
@@ -18,19 +19,50 @@ define(
       * Master Animation model
       */
       model : new AnimationModel(),
+      
+      /**
+      * Dashboard view contains play/pause button, add/remove frame buttons
+      */
+      dashBoardView : undefined,
+      
+      /**
+      * A modal view 
+      */
+      modalView : undefined,
+      
       /**
       * Setup function
       */
       setup : function(){
-        this.curtain = new RectangleView().setStrokeWeight(0)
-                                          .setJerkiness(0)
-                                          .setWidth(window.innerWidth)
-                                          .setHeight(window.innerHeight)
-                                          .setFillColor('rgba(0,0,0,0.5)');
-        var d = new DashboardView();
-        d.setPosition(window.innerWidth/2 - d.width/2, window.innerHeight - 120).setDelegate(this);
-        this.addSubview(d);
-        //this.addSubview(this.curtain);
+        // setup app colors and other app-wide settings
+        AppSettings.ButtonHeight = 80;
+        AppSettings.UIMargin = 40;
+        // disabled button color
+        AppSettings.ButtonColorDisabled = "#CCCCCC";
+        // blue buttons
+        AppSettings.ButtonColorNormalBlue = "#41BDFD";
+        AppSettings.ButtonColorHoverBlue = "#50A9D9";
+        AppSettings.ButtonColorDownBlue = "#285269";
+        // red buttons
+        AppSettings.ButtonColorNormalRed = "#FD4141";
+        AppSettings.ButtonColorHoverRed = "#D95050";
+        AppSettings.ButtonColorDownRed = "#582323";
+        // green buttons
+        AppSettings.ButtonColorNormalGreen = "#41FD72";
+        AppSettings.ButtonColorHoverGreen = "#50D974";
+        AppSettings.ButtonColorDownGreen = "#2A703C";
+        // create and add the dashboard
+        this.dashBoardView = new DashboardView();
+        this.dashBoardView.setPosition(window.innerWidth/2 - this.dashBoardView.width/2, window.innerHeight - 120).setDelegate(this);
+        this.addSubview(this.dashBoardView);
+        // setup the modal view for messages
+        this.modalView = new ModalView();
+        this.addSubview(this.modalView);
+        this.modalView.showMessage("test","yes","no",function(){
+          console.log('test');
+          this.modalView.showMessage("test","yes");
+        }.bind(this));
+        
       },
       onPlayPressed : function(){
         
