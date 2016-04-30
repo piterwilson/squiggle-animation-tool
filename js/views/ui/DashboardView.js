@@ -72,7 +72,7 @@ define(
                 this.delegate['onAddFramePressed']();
               }
             }.bind(this));
-            this.disableUI();
+            this.enableUI();
           },
           enablePlayButton : function(){
             this.playButton.userInteractionEnabled = true;

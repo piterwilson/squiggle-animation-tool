@@ -98,7 +98,6 @@ define(
           
           __centerText : function(){
             this.messageWord.setPosition(this.__msgWindowWidth/2 - this.messageWord.getWidth()/2, 150);
-            console.log(this.messageWord);
           },
           
           showMessage : function (msg, okButtonText, cancelButtonText, callback){
