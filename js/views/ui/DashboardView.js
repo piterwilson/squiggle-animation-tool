@@ -113,7 +113,23 @@ define(
             this.enablePlayButton();
             this.enableRemoveFrameButton();
             this.enableAddFrameButton();
+          },
+          
+          onModelChange: function(model){
+            if(model.models.length > 1){
+              this.enablePlayButton();
+              this.enableRemoveFrameButton();
+            }else{
+              this.disablePlayButton();
+              this.disableRemoveFrameButton();
+            }
+            if(model.models.length === AppSettings.maxFrames){
+              this.disableAddFrameButton();
+            }else{
+              this.enableAddFrameButton();
+            }
           }
+          
         });
         return DashboardView;
   }

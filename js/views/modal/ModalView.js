@@ -110,7 +110,7 @@ define(
                 this.cancel();
               }.bind(this));
               this.okButton.setX(this.__msgWindowWidth/2 - this.okButton.width/2);
-              if(this.cancelButton.parent !== undefined) this.cancelButton.parent.removeSubview(this.cancelButton);
+              if(this.cancelButton.parent) this.cancelButton.parent.removeSubview(this.cancelButton);
             }else{
               this.okButton.setX(AppSettings.UIMargin);
               if(this.okButton.parent !== undefined) this.okButton.parent.addSubview(this.cancelButton);

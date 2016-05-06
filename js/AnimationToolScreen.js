@@ -75,6 +75,8 @@ define(
         AppSettings.ButtonColorDownGreen = "#2A703C";
         // size for the animation frames
         AppSettings.AnimationSize = {width:480,height:320};
+        // max amount of frames allowed
+        AppSettings.maxFrames = 50;
         // create and add the dashboard
         this.dashBoardView = new DashboardView();
         this.dashBoardView.setPosition(window.innerWidth/2 - this.dashBoardView.width/2, window.innerHeight - 120).setDelegate(this);
@@ -88,17 +90,27 @@ define(
         // setup the modal view for messages
         this.modalView = new ModalView();
         this.addSubview(this.modalView);
-        this.modalView.showMessage("delete frame?","yes","no",function(){
-          this.modalView.showMessage("bye.","Doei!");
-        }.bind(this));
+        // this.modalView.showMessage("delete frame?","yes","no",function(){
+        //   this.modalView.showMessage("bye.","Doei!");
+        // }.bind(this));
         // start animation
-        this.model.models.push(new FrameModel());
+        this.model.add(new FrameModel()).on('add remove',function(){
+          this.__broadcastModelChange();
+        }.bind(this));
         // add listeners
         this.addFrameIndexChangeListener(this.framesView, this.frameCounterView);
-        this.addModelChangelistener(this.framesView, this.frameCounterView);
+        this.addModelChangelistener(this.framesView, this.frameCounterView, this.dashBoardView);
         this.__broadcastModelChange();
         this.__broadcastFrameIndexUpdate();
         
+      },
+      
+      keyPressed : function(){
+        if (this.sketch.keyCode === this.sketch.LEFT_ARROW) {
+          if(this.currentFrameIndex > 0) this.setCurrentFrameIndex(this.currentFrameIndex - 1);
+        } else if (this.sketch.keyCode === this.sketch.RIGHT_ARROW) {
+          if(this.currentFrameIndex < this.model.models.length - 1) this.setCurrentFrameIndex(this.currentFrameIndex + 1);
+        }
       },
       
       setCurrentFrameIndex : function(num){
@@ -118,21 +130,40 @@ define(
         }.bind(this));
       },
       
+      /**
+      *Broadcasts frame index updates to the subscribed listeners
+      */
       __broadcastFrameIndexUpdate : function(){
         _.each(this.__frameIndexListeners,function(listener){
           listener.onFrameIndexUpdate(this.currentFrameIndex);
         }.bind(this));
       },
       
+      /**
+      *Broadcasts model change to the subscribed listeners
+      */
       __broadcastModelChange : function(){
         _.each(this.__modelChangeListeners,function(listener){
           listener.onModelChange(this.model);
         }.bind(this));
       },
       
+      // DashboardView delegate methods
       onPlayPressed : function(){
-        
-      }
+      },
+      onAddFramePressed: function(){
+        if(this.model.models.length < AppSettings.maxFrames){
+          this.model.add(new FrameModel());
+          this.setCurrentFrameIndex(this.currentFrameIndex+1);
+        }
+      },
+      onRemoveFramePressed: function(){
+        if(this.model.models.length > 1){
+          this.model.remove(this.model.models[this.model.models.length-1]);
+          this.setCurrentFrameIndex(this.currentFrameIndex-1);
+        }
+      },
+      
     });
     return AnimationToolScreen;
   }
