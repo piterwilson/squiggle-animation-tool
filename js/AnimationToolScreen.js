@@ -90,9 +90,7 @@ define(
         // setup the modal view for messages
         this.modalView = new ModalView();
         this.addSubview(this.modalView);
-        // this.modalView.showMessage("delete frame?","yes","no",function(){
-        //   this.modalView.showMessage("bye.","Doei!");
-        // }.bind(this));
+        
         // start animation
         this.model.add(new FrameModel()).on('add remove',function(){
           this.__broadcastModelChange();
@@ -159,8 +157,10 @@ define(
       },
       onRemoveFramePressed: function(){
         if(this.model.models.length > 1){
-          this.model.remove(this.model.models[this.model.models.length-1]);
-          this.setCurrentFrameIndex(this.currentFrameIndex-1);
+          this.modalView.showMessage("delete frame?","yes","no",function(){
+            this.model.remove(this.model.models[this.model.models.length-1]);
+            this.setCurrentFrameIndex(this.currentFrameIndex-1);
+          }.bind(this));
         }
       },
       
