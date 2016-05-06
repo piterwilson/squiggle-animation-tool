@@ -10,7 +10,7 @@ define(
         ModalView = require("views/modal/ModalView"),
         FramesView = require("views/FramesView"),
         FrameCounterView = require("views/FrameCounterView"),
-        Tween = require("Tween"),
+        
         AnimationToolScreen = Screen.extend({
       
       /**
@@ -158,7 +158,7 @@ define(
       onRemoveFramePressed: function(){
         if(this.model.models.length > 1){
           this.modalView.showMessage("delete frame?","yes","no",function(){
-            this.model.remove(this.model.models[this.model.models.length-1]);
+            this.model.remove(this.model.models[this.currentFrameIndex]);
             this.setCurrentFrameIndex(this.currentFrameIndex-1);
           }.bind(this));
         }

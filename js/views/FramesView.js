@@ -4,9 +4,12 @@ define(
         View = squiggle.views.View,
         RectangleView = squiggle.views.primitives.Rectangle,
         AppSettings = squiggle.models.AppSettings,
+        TWEEN = require("Tween"),
         FramesView = View.extend({
           positions : [],
           frameIndex : 0,
+          tween : undefined,
+          doTween : false,
           initialize: function() {
             View.prototype.initialize.apply(this, arguments);
             _.each([0,1,2],function(i){
@@ -33,26 +36,64 @@ define(
             }.bind(this));
           },
           onFrameIndexUpdate: function(index){
+            if(index > this.frameIndex){
+              console.log('move left');
+              this.tweenTo(-(this.subviews[1].x - this.subviews[0].x));
+            }else if(index < this.frameIndex){
+              console.log('move right');
+              this.tweenTo(this.subviews[1].x - this.subviews[0].x);
+            }else{
+              this.frameIndex = index;
+              this.reassingFrames();
+            }
             this.frameIndex = index;
+          },
+          tweenTo:function(__x){
+            if(this.doTween){
+              this.tween.stop();
+            }
+            var coords = { x: this.x}, __self = this;
+            this.doTween = true;
+            this.tween = new TWEEN.Tween(coords)
+                .to({ x: __x}, 150)
+                .interpolation(TWEEN.Easing.Elastic.In)
+                .onUpdate(function() {
+                  __self.x = this.x;
+                })
+                .onComplete(function(){
+                  this.doTween = false;
+                  this.reassingFrames();
+                }.bind(this)).start();
+            window.requestAnimationFrame(this.update.bind(this));
+          },
+          reassingFrames : function(){
+            console.log("reassignFrames");
+            this.x = 0;
             var frames = []; // frames to draw ...
             _.each(this.subviews,function(view){
               view.setHidden(true);
             });
             if(this.model){
-              if(this.model.models[index-1]){
+              if(this.model.models[this.frameIndex-1]){
                 this.subviews[0].hidden = false;
               }
-              if(this.model.models[index]){
+              if(this.model.models[this.frameIndex]){
                 this.subviews[1].hidden = false;
               }
-              if(this.model.models[index+1]){
+              if(this.model.models[this.frameIndex+1]){
                 this.subviews[2].hidden = false;
               }
             }
           },
+          update:function(){
+            console.log("this.doTween : "+this.doTween);
+            if(this.doTween){
+              TWEEN.update();
+              window.requestAnimationFrame(this.update.bind(this));
+            }
+          },
           onModelChange : function(model){
             this.model = model;
-            this.onFrameIndexUpdate(this.frameIndex);
           }
         });
         return FramesView;

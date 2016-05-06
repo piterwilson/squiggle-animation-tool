@@ -114,14 +114,15 @@ define(
             this.enableRemoveFrameButton();
             this.enableAddFrameButton();
           },
-          
           onModelChange: function(model){
             if(model.models.length > 1){
               this.enablePlayButton();
               this.enableRemoveFrameButton();
+              this.removeFrameButton.hidden = false;
             }else{
               this.disablePlayButton();
               this.disableRemoveFrameButton();
+              this.removeFrameButton.hidden = true;
             }
             if(model.models.length === AppSettings.maxFrames){
               this.disableAddFrameButton();
