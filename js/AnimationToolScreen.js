@@ -155,6 +155,7 @@ define(
       // DashboardView delegate methods
       onPlayPressed : function(){
         if(this.previewView === undefined) this.previewView = new PreviewView();
+        this.previewView.delegate = this;
         this.previewView.start(this.model);
         this.addSubview(this.previewView);
       },
@@ -194,6 +195,11 @@ define(
             
           }.bind(this));
         }
+      },
+      // PreviewView delegate methods
+      onClosePreview : function(){
+        this.previewView.stop();
+        this.removeSubview(this.previewView);
       }
     });
     return AnimationToolScreen;
