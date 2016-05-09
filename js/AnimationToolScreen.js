@@ -151,7 +151,25 @@ define(
       },
       onAddFramePressed: function(){
         if(this.model.models.length < AppSettings.maxFrames){
-          this.model.add(new FrameModel());
+          //this.model.add(new FrameModel());
+          
+          //test
+          var f = new FrameModel();
+          var l;
+          for(var i=0;i<10;i++){
+            l = new squiggle.models.Line();
+            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
+            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
+            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
+            f.addLine(l);
+            l = new squiggle.models.Line();
+            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
+            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
+            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
+            f.addLine(l);
+          }
+          this.model.add(f);
+          
           this.setCurrentFrameIndex(this.currentFrameIndex+1);
         }
       },
@@ -159,11 +177,15 @@ define(
         if(this.model.models.length > 1){
           this.modalView.showMessage("delete frame?","yes","no",function(){
             this.model.remove(this.model.models[this.currentFrameIndex]);
-            this.setCurrentFrameIndex(this.currentFrameIndex-1);
+            if(this.currentFrameIndex !== 0){
+              this.setCurrentFrameIndex(this.currentFrameIndex-1);
+            }else{
+              this.setCurrentFrameIndex(0);
+            }
+            
           }.bind(this));
         }
-      },
-      
+      }
     });
     return AnimationToolScreen;
   }
