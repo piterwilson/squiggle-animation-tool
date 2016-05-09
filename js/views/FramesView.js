@@ -35,7 +35,6 @@ define(
                 case 2:
                   this.positions[i] = {x:Math.max(w - AppSettings.AnimationSize.width/2, (w/2 - AppSettings.AnimationSize.width/2) + AppSettings.UIMargin + AppSettings.AnimationSize.width),y:ypos};
               }
-              render.setPosition(this.positions[i].x,this.positions[i].y);
               rect.setPosition(this.positions[i].x,this.positions[i].y);
               this.backs.push(rect);
               this.renders.push(render);
@@ -45,9 +44,9 @@ define(
           },
           onFrameIndexUpdate: function(index){
             if(index > this.frameIndex){
-              this.tweenTo(-(this.backs[1].x - this.backs[0].x));
+              if(!this.doTween) this.tweenTo(-(this.backs[1].x - this.backs[0].x));
             }else if(index < this.frameIndex){
-              this.tweenTo(this.backs[1].x - this.backs[0].x);
+              if(!this.doTween) this.tweenTo(this.backs[1].x - this.backs[0].x);
             }else{
               this.frameIndex = index;
               this.reassingFrames();

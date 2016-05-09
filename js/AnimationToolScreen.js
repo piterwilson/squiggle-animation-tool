@@ -10,7 +10,7 @@ define(
         ModalView = require("views/modal/ModalView"),
         FramesView = require("views/FramesView"),
         FrameCounterView = require("views/FrameCounterView"),
-        
+        PreviewView = require("views/PreviewView"),
         AnimationToolScreen = Screen.extend({
       
       /**
@@ -52,6 +52,11 @@ define(
       framesView : undefined,
       
       /**
+      * A View for the animation Preview
+      */
+      previewView : undefined,
+      
+      /**
       * Setup function
       */
       setup : function(){
@@ -61,6 +66,7 @@ define(
         AppSettings.UIMargin = 40;
         // disabled button color
         AppSettings.ButtonColorDisabled = "#CCCCCC";
+        AppSettings.DarkBlueColor = "rgba(65,189,253,0.75)";
         // blue buttons
         AppSettings.ButtonColorNormalBlue = "#41BDFD";
         AppSettings.ButtonColorHoverBlue = "#50A9D9";
@@ -148,6 +154,9 @@ define(
       
       // DashboardView delegate methods
       onPlayPressed : function(){
+        if(this.previewView === undefined) this.previewView = new PreviewView();
+        this.previewView.start(this.model);
+        this.addSubview(this.previewView);
       },
       onAddFramePressed: function(){
         if(this.model.models.length < AppSettings.maxFrames){
