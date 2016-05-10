@@ -96,7 +96,6 @@ define(
         // setup the modal view for messages
         this.modalView = new ModalView();
         this.addSubview(this.modalView);
-        
         // start animation
         this.model.add(new FrameModel()).on('add remove',function(){
           this.__broadcastModelChange();
@@ -200,6 +199,9 @@ define(
       onClosePreview : function(){
         this.previewView.stop();
         this.removeSubview(this.previewView);
+      },
+      onDownloadRequest : function(){
+        console.log('download animation');
       }
     });
     return AnimationToolScreen;

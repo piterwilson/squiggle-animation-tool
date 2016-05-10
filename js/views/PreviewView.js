@@ -5,6 +5,7 @@ define(
         RectangleView = squiggle.views.primitives.Rectangle,
         Button = squiggle.views.ui.Button,
         AppSettings = squiggle.models.AppSettings,
+        Path = squiggle.views.primitives.Path,
         AnimationRenderView = squiggle.views.animation.AnimationRender,
         PreviewView = View.extend({
           /**
@@ -26,9 +27,14 @@ define(
           */
           closeButton : undefined,
           
+          /**
+          * Reference to a download button
+          */
+          downloadButton : undefined,
+          
           initialize: function() {
             View.prototype.initialize.apply(this, arguments);
-            var msgBackground, closeButton, _s = AppSettings.ButtonHeight;
+            var DownloadPath, msgBackground, closeButton, _s = AppSettings.ButtonHeight, _m = _s/8;
             // a 'curtain' to cover the screen when there are modals
             this.curtain = new RectangleView().setStrokeWeight(0)
                                               .setJerkiness(0)
@@ -64,6 +70,36 @@ define(
             this.closeButton.getBackgroundRectangle().setRoundedCorners(_s);
             this.closeButton.getWord().setStrokeWeight(_s/6).setPosition(25,25);
             this.addSubview(this.closeButton);
+            this.downloadButton = new Button().setText('')
+                            .setWidth(_s)
+                            .setHeight(_s)
+                            .setPosition(this.animationRender.x + AppSettings.AnimationSize.width - (_s/2), this.closeButton.y + _s + AppSettings.UIMargin/2)
+                            .setBackgroundColorForState(AppSettings.ButtonColorNormalGreen,Button.states.NORMAL)
+                            .setBackgroundColorForState(AppSettings.ButtonColorHoverGreen,Button.states.HOVER)
+                            .setBackgroundColorForState(AppSettings.ButtonColorDownGreen,Button.states.DOWN)
+                            .on(Button.events.CLICKED,function(){
+                              if(this.delegate['onDownloadRequest'] !== undefined){
+                                this.delegate['onDownloadRequest']();
+                              }
+                            }.bind(this));
+            this.downloadButton.getBackgroundRectangle().setRoundedCorners(_s);
+            
+            DownloadPath = new Path().setStrokeWeight(_s/6)
+                                         .setStrokeColor('White')
+                                         .addPoint(_m*2, _m*4)
+                                         .addPoint(_m*4, _m*6)
+                                         .addPoint(_m*6, _m*4)
+                                         .setFill(false)
+                                         .setClosed(false);
+            this.downloadButton.addSubview(DownloadPath);
+            DownloadPath = new Path().setStrokeWeight(_s/6)
+                                         .setStrokeColor('White')
+                                         .addPoint(_m*4, _m*2)
+                                         .addPoint(_m*4, _m*6)
+                                         .setFill(false)
+                                         .setClosed(false);
+            this.downloadButton.addSubview(DownloadPath);
+            this.addSubview(this.downloadButton);
             this.userInteractionEnabled = true;
           },
           start : function(model){

@@ -19,10 +19,9 @@ define(
             _.each([0,1,2],function(i){
               rect = new RectangleView().setWidth(AppSettings.AnimationSize.width)
                                         .setHeight(AppSettings.AnimationSize.height)
-                                        .setStrokeWeight(2)
+                                        .setStrokeWeight(0)
                                         .setJerkiness(0.5)
                                         .setRoundedCorners(2)
-                                        .setStrokeColor('rgba(0,0,0,0.0)')
                                         .setFillColor('White');
               render = new FrameRenderView();
               switch(i){
