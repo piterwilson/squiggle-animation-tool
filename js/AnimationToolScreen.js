@@ -11,6 +11,7 @@ define(
         FramesView = require("views/FramesView"),
         FrameCounterView = require("views/FrameCounterView"),
         PreviewView = require("views/PreviewView"),
+        AnimationRenderView = squiggle.views.animation.AnimationRender,
         AnimationToolScreen = Screen.extend({
       
       /**
@@ -201,7 +202,18 @@ define(
         this.removeSubview(this.previewView);
       },
       onDownloadRequest : function(){
-        console.log('download animation');
+        this.onClosePreview();
+        this.modalView.showProgress('Making a .gif');
+        var renderer = new AnimationRenderView().setModel(this.model)
+                                                .setWidth(AppSettings.AnimationSize.width)
+                                                .setHeight(AppSettings.AnimationSize.height)
+                                                .setWorkerScript('js/gif.worker.js')
+                                                .setExportFrameDelay(100)
+                                                .export(function(blob){
+                                                  // open the animated gif on a new window
+                                                  this.modalView.cancel();
+                                                  window.open(URL.createObjectURL(blob));
+                                                }.bind(this));
       }
     });
     return AnimationToolScreen;

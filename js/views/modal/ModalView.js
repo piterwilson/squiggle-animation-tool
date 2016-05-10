@@ -34,6 +34,10 @@ define(
           
           __msgWindowWidth : 600,
           
+          __progressm : false,
+          __progressj : 1,
+          __progressi : 0.5,
+          
           initialize: function() {
             View.prototype.initialize.apply(this, arguments);
             // a 'curtain' to cover the screen when there are modals
@@ -93,27 +97,33 @@ define(
                                   .setJerkiness(1)
                                   .setStrokeWeight(4);
             msgBackground.addSubview(this.messageWord);
-            this.__centerText();    
+            this.__centerTextMessage();    
           },
           
-          __centerText : function(){
+          __centerTextMessage : function(){
             this.messageWord.setPosition(this.__msgWindowWidth/2 - this.messageWord.getWidth()/2, 150);
+          },
+          
+          __centerTextProgress :function(){
+            this.messageWord.setPosition(this.__msgWindowWidth/2 - this.messageWord.getWidth()/2, 200);
           },
           
           showMessage : function (msg, okButtonText, cancelButtonText, callback){
             this.addSubview(this.curtain);
-            this.messageWord.setText(msg);
-            this.__centerText();
+            this.messageWord.setText(msg).setJerkiness(1);
+            this.__centerTextMessage();
             this.okButton.setText(okButtonText);
+            this.okButton.setHidden(false);
+            
             if(cancelButtonText === undefined && callback === undefined){
               this.okButton.on(Button.events.CLICKED,function(){
                 this.cancel();
               }.bind(this));
               this.okButton.setX(this.__msgWindowWidth/2 - this.okButton.width/2);
-              if(this.cancelButton.parent) this.cancelButton.parent.removeSubview(this.cancelButton);
+              this.cancelButton.setHidden(true);
             }else{
               this.okButton.setX(AppSettings.UIMargin);
-              if(this.okButton.parent !== undefined) this.okButton.parent.addSubview(this.cancelButton);
+              this.cancelButton.setHidden(false);
               this.cancelButton.setText(cancelButtonText);
               this.okButton.on(Button.events.CLICKED,function(){
                 this.cancel();
@@ -122,17 +132,32 @@ define(
             }
           },
           
+          showProgress : function (msg){
+            this.addSubview(this.curtain);
+            this.messageWord.setText(msg);
+            this.__centerTextProgress();
+            this.cancelButton.setHidden(true);
+            this.okButton.setHidden(true);
+            this.__progressm = true;
+          },
+          
           cancel : function(){
             this.removeSubview(this.curtain);
             this.okButton.off(Button.events.CLICKED);
+            this.__progressm = false;
           },
           
           draw : function(){
             View.prototype.draw.apply(this,arguments);
+            if(this.__progressm){
+              this.messageWord.setJerkiness(this.__progressj);
+              this.__progressj += this.__progressi;
+              if(this.__progressj > 10 || this.__progressj < 1){
+                this.__progressi *= -1;
+              }
+            }
           },
-          
-          
-          
+
         }
       );
     return ModalView;

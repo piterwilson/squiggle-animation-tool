@@ -49,7 +49,8 @@ define(
                                               .setPosition(window.innerWidth/2 - AppSettings.AnimationSize.width/2, window.innerHeight/2 - AppSettings.AnimationSize.height/2)
                                               .setFillColor('White');
             this.curtain.addSubview(msgBackground);
-            this.animationRender = new AnimationRenderView().setPosition(window.innerWidth/2 - AppSettings.AnimationSize.width/2, window.innerHeight/2 - AppSettings.AnimationSize.height/2);
+            this.animationRender = new AnimationRenderView().setPosition(window.innerWidth/2 - AppSettings.AnimationSize.width/2, window.innerHeight/2 - AppSettings.AnimationSize.height/2)
+                                                            .setFrameDelay(3);
             this.addSubview(this.animationRender);
             this.closeButton = new Button().setText('x')
                             .setWidth(_s)
