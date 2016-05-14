@@ -99,7 +99,8 @@ define(
         this.modalView = new ModalView();
         this.addSubview(this.modalView);
         // start animation
-        this.model.add(new FrameModel()).on('add remove',function(){
+        this.model.add(new FrameModel());
+        this.model.on('add remove',function(){
           this.__broadcastModelChange();
         }.bind(this));
         // add listeners
@@ -107,7 +108,6 @@ define(
         this.addModelChangelistener(this.framesView, this.frameCounterView, this.dashBoardView);
         this.__broadcastModelChange();
         this.__broadcastFrameIndexUpdate();
-        
       },
       
       keyPressed : function(){
@@ -163,7 +163,6 @@ define(
       onAddFramePressed: function(){
         if(this.model.models.length < AppSettings.maxFrames){
           //this.model.add(new FrameModel());
-          
           //test
           var f = new FrameModel();
           var l;
@@ -180,7 +179,6 @@ define(
             f.addLine(l);
           }
           this.model.add(f);
-          
           this.setCurrentFrameIndex(this.currentFrameIndex+1);
         }
       },
