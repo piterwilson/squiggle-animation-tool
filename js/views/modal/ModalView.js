@@ -85,7 +85,12 @@ define(
                             .setBackgroundColorForState(AppSettings.ButtonColorDownRed,Button.states.DOWN)
                             .setShowUnderline(false)
                             .on(Button.events.CLICKED,function(){
-                                                        this.cancel();
+                                                        this.cancelButton.jerkIt({
+                                                          amount:5,
+                                                          complete:function(){
+                                                            this.cancel();
+                                                          }.bind(this)
+                                                        })
                                                       }.bind(this));
             this.cancelButton.getBackgroundRectangle().setRoundedCorners(AppSettings.ButtonHeight);
             this.cancelButton.getWord().setStrokeWeight(4);
@@ -117,7 +122,12 @@ define(
             
             if(cancelButtonText === undefined && callback === undefined){
               this.okButton.on(Button.events.CLICKED,function(){
-                this.cancel();
+                this.okButton.jerkIt({
+                  amount:10,
+                  complete:function(){
+                    this.cancel();
+                  }.bind(this)
+                })
               }.bind(this));
               this.okButton.setX(this.__msgWindowWidth/2 - this.okButton.width/2);
               this.cancelButton.setHidden(true);
@@ -126,8 +136,13 @@ define(
               this.cancelButton.setHidden(false);
               this.cancelButton.setText(cancelButtonText);
               this.okButton.on(Button.events.CLICKED,function(){
-                this.cancel();
-                callback();
+                this.okButton.jerkIt({
+                  amount:10,
+                  complete:function(){
+                    this.cancel();
+                    callback();
+                  }.bind(this)
+                })
               }.bind(this));
             }
           },

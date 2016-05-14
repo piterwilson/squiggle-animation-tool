@@ -64,9 +64,14 @@ define(
                             .setFontColorForState('White',Button.states.DOWN)
                             .setFontSize(40)
                             .on(Button.events.CLICKED,function(){
-                              if(this.delegate['onClosePreview'] !== undefined){
-                                this.delegate['onClosePreview']();
-                              }
+                              this.closeButton.jerkIt({
+                                amount:10,
+                                complete:function(){
+                                  if(this.delegate['onClosePreview'] !== undefined){
+                                    this.delegate['onClosePreview']();
+                                  }
+                                }.bind(this)
+                              });
                             }.bind(this));
             this.closeButton.getBackgroundRectangle().setRoundedCorners(_s);
             this.closeButton.getWord().setStrokeWeight(_s/6).setPosition(25,25);
@@ -79,9 +84,14 @@ define(
                             .setBackgroundColorForState(AppSettings.ButtonColorHoverGreen,Button.states.HOVER)
                             .setBackgroundColorForState(AppSettings.ButtonColorDownGreen,Button.states.DOWN)
                             .on(Button.events.CLICKED,function(){
-                              if(this.delegate['onDownloadRequest'] !== undefined){
-                                this.delegate['onDownloadRequest']();
-                              }
+                              this.downloadButton.jerkIt({
+                                amount:10,
+                                complete:function(){
+                                  if(this.delegate['onDownloadRequest'] !== undefined){
+                                    this.delegate['onDownloadRequest']();
+                                  }
+                                }.bind(this)
+                              });
                             }.bind(this));
             this.downloadButton.getBackgroundRectangle().setRoundedCorners(_s);
             

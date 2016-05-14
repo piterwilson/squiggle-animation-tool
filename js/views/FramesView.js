@@ -93,6 +93,11 @@ define(
                 this.renders[2].setModel(this.model.models[this.frameIndex+1]);
               }
             }
+            if(this.delegate !== undefined){
+              if(this.delegate['onFrameTransitionComplete'] !== undefined){
+                this.delegate['onFrameTransitionComplete']();
+              }
+            }
           },
           update:function(){
             if(this.doTween){

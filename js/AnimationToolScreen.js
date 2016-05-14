@@ -97,6 +97,7 @@ define(
         this.addSubview(this.dashBoardView);
         // frames view
         this.framesView = new FramesView();
+        this.framesView.delegate = this;
         this.addSubview(this.framesView);
         // frame capture
         this.captureView = new FrameCaptureView().setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2))
@@ -152,7 +153,7 @@ define(
       __broadcastFrameIndexUpdate : function(){
         _.each(this.__frameIndexListeners,function(listener){
           listener.onFrameIndexUpdate(this.currentFrameIndex);
-          this.captureView.model = this.model.models[this.currentFrameIndex];
+          
         }.bind(this));
       },
       
@@ -176,7 +177,8 @@ define(
       },
       onAddFramePressed: function(){
         if(this.model.models.length < AppSettings.maxFrames){
-          this.model.add(new FrameModel());
+          this.model.models.splice(this.currentFrameIndex + 1, 0, new FrameModel());
+          this.model.trigger('add');
           this.setCurrentFrameIndex(this.currentFrameIndex+1);
         }
       },
@@ -191,6 +193,9 @@ define(
             }
           }.bind(this));
         }
+      },
+      onFrameTransitionComplete : function(){
+        this.captureView.model = this.model.models[this.currentFrameIndex];
       },
       // PreviewView delegate methods
       onClosePreview : function(){

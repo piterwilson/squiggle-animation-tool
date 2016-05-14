@@ -18,6 +18,7 @@ define(
           onFrameIndexUpdate: function(index){
             this.currentFrame = index + 1;
             this.updateCounter();
+            this.word.jerkIt(20);
             },
           onModelChange : function(model){
             this.totalFrames = model.models.length;
@@ -27,6 +28,7 @@ define(
             this.word.setText(this.currentFrame+" / "+this.totalFrames)
                       .setFontColor(AppSettings.maxFrames === this.totalFrames ? AppSettings.ButtonColorNormalRed : '#000000')
                       .setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
+            
           }
         });
         return FrameCounterView;

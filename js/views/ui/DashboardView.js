@@ -58,19 +58,34 @@ define(
             this.addFrameButton = b3;
             this.width = xpos + _s;
             b1.on(Button.events.CLICKED,function(){
-              if(this.delegate['onPlayPressed'] !== undefined){
-                this.delegate['onPlayPressed']();
-              }
+              b1.jerkIt({
+                amount:10,
+                complete:function(){
+                  if(this.delegate['onPlayPressed'] !== undefined){
+                    this.delegate['onPlayPressed']();
+                  }
+                }.bind(this)
+              });
             }.bind(this));
             b2.on(Button.events.CLICKED,function(){
-              if(this.delegate['onRemoveFramePressed'] !== undefined){
-                this.delegate['onRemoveFramePressed']();
-              }
+              b2.jerkIt({
+                amount:10,
+                complete:function(){
+                  if(this.delegate['onRemoveFramePressed'] !== undefined){
+                    this.delegate['onRemoveFramePressed']();
+                  }
+                }.bind(this)
+              });
             }.bind(this));
             b3.on(Button.events.CLICKED,function(){
-              if(this.delegate['onAddFramePressed'] !== undefined){
-                this.delegate['onAddFramePressed']();
-              }
+              b3.jerkIt({
+                amount:10,
+                complete:function(){
+                  if(this.delegate['onAddFramePressed'] !== undefined){
+                    this.delegate['onAddFramePressed']();
+                  }
+                }.bind(this)
+              });
             }.bind(this));
             this.enableUI();
           },
