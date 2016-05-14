@@ -12,6 +12,7 @@ define(
         FrameCounterView = require("views/FrameCounterView"),
         PreviewView = require("views/PreviewView"),
         AnimationRenderView = squiggle.views.animation.AnimationRender,
+        saveAs = require("saveAs"),
         AnimationToolScreen = Screen.extend({
       
       /**
@@ -207,12 +208,13 @@ define(
         var renderer = new AnimationRenderView().setModel(this.model)
                                                 .setWidth(AppSettings.AnimationSize.width)
                                                 .setHeight(AppSettings.AnimationSize.height)
-                                                .setWorkerScript('js/gif.worker.js')
+                                                .setWorkerScript('js/vendor/gif.worker.js')
                                                 .setExportFrameDelay(100)
                                                 .export(function(blob){
                                                   // open the animated gif on a new window
                                                   this.modalView.cancel();
-                                                  window.open(URL.createObjectURL(blob));
+                                                  saveAs(blob,'animation.gif');
+                                                  //window.open(URL.createObjectURL(blob));
                                                 }.bind(this));
       }
     });
