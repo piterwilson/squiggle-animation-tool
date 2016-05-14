@@ -91,10 +91,7 @@ define(
         AppSettings.AnimationSize = {width:480,height:320};
         // max amount of frames allowed
         AppSettings.maxFrames = 50;
-        // create and add the dashboard
-        this.dashBoardView = new DashboardView();
-        this.dashBoardView.setPosition(window.innerWidth/2 - this.dashBoardView.width/2, window.innerHeight - 120).setDelegate(this);
-        this.addSubview(this.dashBoardView);
+        
         // frames view
         this.framesView = new FramesView();
         this.framesView.delegate = this;
@@ -107,6 +104,10 @@ define(
         // frame counter view
         this.frameCounterView = new FrameCounterView();
         this.addSubview(this.frameCounterView);
+        // create and add the dashboard
+        this.dashBoardView = new DashboardView();
+        this.dashBoardView.setDelegate(this);
+        this.addSubview(this.dashBoardView);
         // setup the modal view for messages
         this.modalView = new ModalView();
         this.addSubview(this.modalView);
@@ -116,7 +117,7 @@ define(
           this.__broadcastModelChange();
         }.bind(this));
         // add listeners
-        this.addFrameIndexChangeListener(this.framesView, this.frameCounterView);
+        this.addFrameIndexChangeListener(this.framesView, this.frameCounterView, this.dashBoardView);
         this.addModelChangelistener(this.framesView, this.frameCounterView, this.dashBoardView);
         this.__broadcastModelChange();
         this.__broadcastFrameIndexUpdate();
@@ -153,7 +154,6 @@ define(
       __broadcastFrameIndexUpdate : function(){
         _.each(this.__frameIndexListeners,function(listener){
           listener.onFrameIndexUpdate(this.currentFrameIndex);
-          
         }.bind(this));
       },
       

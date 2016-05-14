@@ -85,6 +85,7 @@ define(
                             .setBackgroundColorForState(AppSettings.ButtonColorDownRed,Button.states.DOWN)
                             .setShowUnderline(false)
                             .on(Button.events.CLICKED,function(){
+                                                        this.messageWord.jerkIt();
                                                         this.cancelButton.jerkIt({
                                                           amount:5,
                                                           complete:function(){
@@ -122,6 +123,7 @@ define(
             
             if(cancelButtonText === undefined && callback === undefined){
               this.okButton.on(Button.events.CLICKED,function(){
+                this.messageWord.jerkIt();
                 this.okButton.jerkIt({
                   amount:10,
                   complete:function(){
@@ -136,6 +138,7 @@ define(
               this.cancelButton.setHidden(false);
               this.cancelButton.setText(cancelButtonText);
               this.okButton.on(Button.events.CLICKED,function(){
+                this.messageWord.jerkIt();
                 this.okButton.jerkIt({
                   amount:10,
                   complete:function(){

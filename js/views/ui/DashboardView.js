@@ -11,6 +11,10 @@ define(
           playButton : undefined,
           addFrameButton : undefined,
           removeFrameButton : undefined,
+          nextFrameButton : undefined,
+          previousFrameButton : undefined,
+          numFrames : 0,
+          currentFrameIndex : 0,
           width : 0,
           initialize: function() {
             View.prototype.initialize.apply(this, arguments);
@@ -18,11 +22,25 @@ define(
               [{name:"delegate", value:1}]
             );
             this.userInteractionEnabled = true;
-            var _s = AppSettings.ButtonHeight, t, r1, r2, b1, b2, b3, xpos;
-            xpos = 0;
+            var _s = AppSettings.ButtonHeight, t, r1, r2, b1, b2, b3, xpos, ypos;
+            this.previousFrameButton = new Button().setText('')
+                                               .setWidth(_s)
+                                               .setHeight(_s)
+                                               .setPosition(AppSettings.UIMargin,window.innerHeight/2 - _s/2);
+            this.previousFrameButton.getBackgroundRectangle().setRoundedCorners(_s);
+            this.addSubview(this.previousFrameButton);
+            this.nextFrameButton = new Button().setText('')
+                                               .setWidth(_s)
+                                               .setHeight(_s)
+                                               .setPosition(window.innerWidth - AppSettings.UIMargin - _s,window.innerHeight/2 - _s/2);
+            this.nextFrameButton.getBackgroundRectangle().setRoundedCorners(_s);
+            this.addSubview(this.nextFrameButton);
+            xpos = window.innerWidth/2 - 160;
+            ypos = window.innerHeight - 120;
             b1 = new Button().setText('')
                             .setWidth(_s)
-                            .setHeight(_s);
+                            .setHeight(_s)
+                            .setPosition(window.innerWidth/2 - AppSettings.AnimationSize.width/2,ypos);
             b1.getBackgroundRectangle().setRoundedCorners(_s);
             t = new PathView()
               .addPoint(0,0)
@@ -38,7 +56,7 @@ define(
             b2 = new Button().setText('')
                             .setWidth(_s)
                             .setHeight(_s)
-                            .setPosition(xpos, 0);
+                            .setPosition(xpos, ypos);
             b2.getBackgroundRectangle().setRoundedCorners(_s);
             r1 = new RectangleView().setWidth(_s/2).setHeight(_s/6).setStrokeWeight(0).setFillColor("#ffffff").setPosition(_s/4,_s/2 - (_s/12));
             b2.addSubview(r1);
@@ -48,7 +66,7 @@ define(
             b3 = new Button().setText('')
                             .setWidth(_s)
                             .setHeight(_s)
-                            .setPosition(xpos, 0);
+                            .setPosition(xpos, ypos);
             b3.getBackgroundRectangle().setRoundedCorners(_s);
             r2 = new RectangleView().setWidth(_s/2).setHeight(_s/6).setStrokeWeight(0).setFillColor("#ffffff").setPosition(_s/4,_s/2 - (_s/12));
             r3 = new RectangleView().setWidth(_s/6).setHeight(_s/2).setStrokeWeight(0).setFillColor("#ffffff").setPosition(_s/2 - (_s/12), _s/4);
@@ -89,15 +107,33 @@ define(
             }.bind(this));
             this.enableUI();
           },
-          enablePlayButton : function(){
-            this.playButton.userInteractionEnabled = true;
-            this.playButton.setBackgroundColorForState(AppSettings.ButtonColorNormalBlue,Button.states.NORMAL)
+          enableBlueButton : function(button){
+            button.userInteractionEnabled = true;
+            button.setBackgroundColorForState(AppSettings.ButtonColorNormalBlue,Button.states.NORMAL)
                            .setBackgroundColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER)
                            .setBackgroundColorForState(AppSettings.ButtonColorDownBlue,Button.states.DOWN);
           },
+          disableButton : function(button){
+            button.userInteractionEnabled = false;
+            button.setBackgroundColorForState(AppSettings.ButtonColorDisabled,Button.states.NORMAL);
+          },
+          enablePreviousFrameButton(){
+            this.enableBlueButton(this.previousFrameButton);
+          },
+          disablePreviousFrameButton(){
+            this.disableButton(this.previousFrameButton);
+          },
+          enableNextFrameButton:function(){
+            this.enableBlueButton(this.nextFrameButton);
+          },
+          disableNextFrameButton:function(){
+            this.disableButton(this.nextFrameButton);
+          },
+          enablePlayButton : function(){
+            this.enableBlueButton(this.playButton);
+          },
           disablePlayButton : function(){
-            this.playButton.userInteractionEnabled = false;
-            this.playButton.setBackgroundColorForState(AppSettings.ButtonColorDisabled,Button.states.NORMAL);
+            this.disableButton(this.playButton);
           },
           enableAddFrameButton : function(){
             this.addFrameButton.userInteractionEnabled = true;
@@ -106,8 +142,7 @@ define(
                            .setBackgroundColorForState(AppSettings.ButtonColorDownGreen,Button.states.DOWN);
           },
           disableAddFrameButton : function(){
-            this.addFrameButton.userInteractionEnabled = false;
-            this.addFrameButton.setBackgroundColorForState(AppSettings.ButtonColorDisabled,Button.states.NORMAL);
+            this.disableButton(this.addFrameButton);
           },
           enableRemoveFrameButton : function(){
             this.removeFrameButton.userInteractionEnabled = true;
@@ -116,20 +151,24 @@ define(
                            .setBackgroundColorForState(AppSettings.ButtonColorDownRed,Button.states.DOWN);
           },
           disableRemoveFrameButton : function(){
-            this.removeFrameButton.userInteractionEnabled = false;
-            this.removeFrameButton.setBackgroundColorForState(AppSettings.ButtonColorDisabled,Button.states.NORMAL);
+            this.disableButton(this.removeFrameButton);
           },
           disableUI : function(){
             this.disablePlayButton();
             this.disableRemoveFrameButton();
             this.disableAddFrameButton();
+            this.disablePreviousFrameButton();
+            this.disableNextFrameButton();
           },
           enableUI : function(){
             this.enablePlayButton();
             this.enableRemoveFrameButton();
             this.enableAddFrameButton();
+            this.enablePreviousFrameButton();
+            this.enableNextFrameButton();
           },
           onModelChange: function(model){
+            this.numFrames = model.models.length;
             if(model.models.length > 1){
               this.enablePlayButton();
               this.enableRemoveFrameButton();
@@ -144,8 +183,28 @@ define(
             }else{
               this.enableAddFrameButton();
             }
+          },
+          onFrameIndexUpdate : function(index){
+            this.currentFrameIndex = index;
+            this.evaluateStateNextPrevButtons();
+          },
+          evaluateStateNextPrevButtons(){
+            console.log(this.numFrames);
+            console.log(this.currentFrameIndex);
+            if(this.numFrames > 1){
+              if(this.currentFrameIndex !== this.numFrames - 1){
+                this.enableNextFrameButton();
+              }
+              if(this.currentFrameIndex === 0){
+                this.disablePreviousFrameButton();
+              }else{
+                this.enablePreviousFrameButton();
+              }
+            }else{
+              this.disablePreviousFrameButton();
+              this.disableNextFrameButton();
+            }
           }
-          
         });
         return DashboardView;
   }
