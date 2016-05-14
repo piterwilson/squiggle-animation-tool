@@ -12,6 +12,7 @@ define(
         FrameCounterView = require("views/FrameCounterView"),
         PreviewView = require("views/PreviewView"),
         AnimationRenderView = squiggle.views.animation.AnimationRender,
+        FrameCaptureView = squiggle.views.animation.FrameCapture,
         saveAs = require("saveAs"),
         AnimationToolScreen = Screen.extend({
       
@@ -32,6 +33,11 @@ define(
       * Master Animation model
       */
       model : new AnimationModel(),
+      
+      /**
+      * A FrameCapture instance to draw on
+      */
+      captureView : undefined,
       
       /**
       * Dashboard view contains play/pause button, add/remove frame buttons
@@ -92,6 +98,11 @@ define(
         // frames view
         this.framesView = new FramesView();
         this.addSubview(this.framesView);
+        // frame capture
+        this.captureView = new FrameCaptureView().setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2))
+                                                 .setWidth(AppSettings.AnimationSize.width)
+                                                 .setHeight(AppSettings.AnimationSize.height);
+        this.addSubview(this.captureView);
         // frame counter view
         this.frameCounterView = new FrameCounterView();
         this.addSubview(this.frameCounterView);
@@ -141,6 +152,7 @@ define(
       __broadcastFrameIndexUpdate : function(){
         _.each(this.__frameIndexListeners,function(listener){
           listener.onFrameIndexUpdate(this.currentFrameIndex);
+          this.captureView.model = this.model.models[this.currentFrameIndex];
         }.bind(this));
       },
       
@@ -150,6 +162,7 @@ define(
       __broadcastModelChange : function(){
         _.each(this.__modelChangeListeners,function(listener){
           listener.onModelChange(this.model);
+          this.captureView.frameRender = this.framesView.getCurrentFrameRender();
         }.bind(this));
       },
       
@@ -159,26 +172,11 @@ define(
         this.previewView.delegate = this;
         this.previewView.start(this.model);
         this.addSubview(this.previewView);
+        this.captureView.hidden = true;
       },
       onAddFramePressed: function(){
         if(this.model.models.length < AppSettings.maxFrames){
-          //this.model.add(new FrameModel());
-          //test
-          var f = new FrameModel();
-          var l;
-          for(var i=0;i<10;i++){
-            l = new squiggle.models.Line();
-            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
-            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
-            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
-            f.addLine(l);
-            l = new squiggle.models.Line();
-            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
-            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
-            l.addPoint(Math.random() * AppSettings.AnimationSize.width, Math.random() * AppSettings.AnimationSize.height);
-            f.addLine(l);
-          }
-          this.model.add(f);
+          this.model.add(new FrameModel());
           this.setCurrentFrameIndex(this.currentFrameIndex+1);
         }
       },
@@ -191,7 +189,6 @@ define(
             }else{
               this.setCurrentFrameIndex(0);
             }
-            
           }.bind(this));
         }
       },
@@ -199,6 +196,7 @@ define(
       onClosePreview : function(){
         this.previewView.stop();
         this.removeSubview(this.previewView);
+        this.captureView.hidden = false;
       },
       onDownloadRequest : function(){
         this.onClosePreview();

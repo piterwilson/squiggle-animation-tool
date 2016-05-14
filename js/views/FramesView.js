@@ -102,7 +102,11 @@ define(
           },
           onModelChange : function(model){
             this.model = model;
-          }
+          },
+          getCurrentFrameRender : function(){
+            if(this.renders && this.renders.length > 1) return this.renders[1];
+            return undefined;
+          },
         });
         return FramesView;
       }
