@@ -101,7 +101,8 @@ define(
             this.messageWord = new Word().setFontSize(fs)
                                   .setText('This is a test?')
                                   .setJerkiness(1)
-                                  .setStrokeWeight(4);
+                                  .setStrokeWeight(4)
+                                  .setFontColor(AppSettings.ButtonColorNormalBlue);
             msgBackground.addSubview(this.messageWord);
             this.__centerTextMessage();    
           },

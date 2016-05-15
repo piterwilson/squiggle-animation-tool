@@ -26,7 +26,7 @@ define(
           },
           updateCounter : function(){
             this.word.setText(this.currentFrame+" / "+this.totalFrames)
-                      .setFontColor(AppSettings.maxFrames === this.totalFrames ? AppSettings.ButtonColorNormalRed : '#000000')
+                      .setFontColor(AppSettings.maxFrames === this.totalFrames ? AppSettings.ButtonColorNormalRed : AppSettings.ButtonColorNormalBlue)
                       .setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
             
           }

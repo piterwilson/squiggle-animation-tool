@@ -26,14 +26,46 @@ define(
             this.previousFrameButton = new Button().setText('')
                                                .setWidth(_s)
                                                .setHeight(_s)
-                                               .setPosition(AppSettings.UIMargin,window.innerHeight/2 - _s/2);
+                                               .setPosition(AppSettings.UIMargin,window.innerHeight/2 - _s/2)
+                                               .on(Button.events.CLICKED,function(){
+                                                 this.previousFrameButton.jerkIt();
+                                                 if(this.delegate['onPreviousFramePressed'] !== undefined){
+                                                   this.delegate['onPreviousFramePressed']();
+                                                 }
+                                               }.bind(this));
             this.previousFrameButton.getBackgroundRectangle().setRoundedCorners(_s);
             this.addSubview(this.previousFrameButton);
+            t = new PathView()
+              .addPoint(_s/4,0)
+              .addPoint(0,_s/4)
+              .addPoint(_s/4,_s/2)
+              .setStrokeWeight(_s/6)
+              .setStrokeColor('White')
+              .setPosition(_s/2.5,_s/4)
+              .setFill(false)
+              .setClosed(false);
+            this.previousFrameButton.addSubview(t);
             this.nextFrameButton = new Button().setText('')
                                                .setWidth(_s)
                                                .setHeight(_s)
-                                               .setPosition(window.innerWidth - AppSettings.UIMargin - _s,window.innerHeight/2 - _s/2);
+                                               .setPosition(window.innerWidth - AppSettings.UIMargin - _s,window.innerHeight/2 - _s/2)
+                                               .on(Button.events.CLICKED,function(){
+                                                 this.nextFrameButton.jerkIt();
+                                                 if(this.delegate['onNextFramePressed'] !== undefined){
+                                                   this.delegate['onNextFramePressed']();
+                                                 }
+                                               }.bind(this));
             this.nextFrameButton.getBackgroundRectangle().setRoundedCorners(_s);
+            t = new PathView()
+              .addPoint(0,0)
+              .addPoint(_s/4,_s/4)
+              .addPoint(0,_s/2)
+              .setStrokeWeight(_s/6)
+              .setStrokeColor('White')
+              .setPosition(_s/2.5,_s/4)
+              .setFill(false)
+              .setClosed(false);
+            this.nextFrameButton.addSubview(t);
             this.addSubview(this.nextFrameButton);
             xpos = window.innerWidth/2 - 160;
             ypos = window.innerHeight - 120;
@@ -107,6 +139,13 @@ define(
             }.bind(this));
             this.enableUI();
           },
+          keyPressed : function(){
+            if (this.sketch.keyCode === this.sketch.LEFT_ARROW) {
+              if(this.currentFrameIndex > 0) this.previousFrameButton.trigger(Button.events.CLICKED);
+            } else if (this.sketch.keyCode === this.sketch.RIGHT_ARROW) {
+              if(this.currentFrameIndex < this.numFrames - 1) this.nextFrameButton.trigger(Button.events.CLICKED);
+            }
+          },
           enableBlueButton : function(button){
             button.userInteractionEnabled = true;
             button.setBackgroundColorForState(AppSettings.ButtonColorNormalBlue,Button.states.NORMAL)
@@ -173,9 +212,9 @@ define(
               this.enablePlayButton();
               this.enableRemoveFrameButton();
               this.removeFrameButton.hidden = false;
+              this.playButton.hidden = false;
             }else{
-              this.disablePlayButton();
-              this.disableRemoveFrameButton();
+              this.playButton.hidden = true;
               this.removeFrameButton.hidden = true;
             }
             if(model.models.length === AppSettings.maxFrames){
@@ -189,11 +228,13 @@ define(
             this.evaluateStateNextPrevButtons();
           },
           evaluateStateNextPrevButtons(){
-            console.log(this.numFrames);
-            console.log(this.currentFrameIndex);
             if(this.numFrames > 1){
+              this.nextFrameButton.hidden = false;
+              this.previousFrameButton.hidden = false;
               if(this.currentFrameIndex !== this.numFrames - 1){
                 this.enableNextFrameButton();
+              }else{
+                this.disableNextFrameButton();
               }
               if(this.currentFrameIndex === 0){
                 this.disablePreviousFrameButton();
@@ -201,8 +242,8 @@ define(
                 this.enablePreviousFrameButton();
               }
             }else{
-              this.disablePreviousFrameButton();
-              this.disableNextFrameButton();
+              this.nextFrameButton.hidden = true;
+              this.previousFrameButton.hidden = true;
             }
           }
         });

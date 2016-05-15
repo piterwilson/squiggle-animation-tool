@@ -124,11 +124,7 @@ define(
       },
       
       keyPressed : function(){
-        if (this.sketch.keyCode === this.sketch.LEFT_ARROW) {
-          if(this.currentFrameIndex > 0) this.setCurrentFrameIndex(this.currentFrameIndex - 1);
-        } else if (this.sketch.keyCode === this.sketch.RIGHT_ARROW) {
-          if(this.currentFrameIndex < this.model.models.length - 1) this.setCurrentFrameIndex(this.currentFrameIndex + 1);
-        }
+        this.dashBoardView.keyPressed();
       },
       
       setCurrentFrameIndex : function(num){
@@ -185,7 +181,8 @@ define(
       onRemoveFramePressed: function(){
         if(this.model.models.length > 1){
           this.modalView.showMessage("delete frame?","yes","no",function(){
-            this.model.remove(this.model.models[this.currentFrameIndex]);
+            this.model.models.splice(this.currentFrameIndex, 1);
+            this.model.trigger('remove');
             if(this.currentFrameIndex !== 0){
               this.setCurrentFrameIndex(this.currentFrameIndex-1);
             }else{
@@ -193,6 +190,12 @@ define(
             }
           }.bind(this));
         }
+      },
+      onNextFramePressed : function(){
+        if(this.currentFrameIndex < this.model.models.length - 1) this.setCurrentFrameIndex(this.currentFrameIndex + 1);
+      },
+      onPreviousFramePressed : function(){
+        if(this.currentFrameIndex > 0) this.setCurrentFrameIndex(this.currentFrameIndex - 1);
       },
       onFrameTransitionComplete : function(){
         this.captureView.model = this.model.models[this.currentFrameIndex];
