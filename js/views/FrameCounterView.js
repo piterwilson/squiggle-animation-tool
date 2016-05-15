@@ -8,6 +8,7 @@ define(
           word : undefined,
           totalFrames : 0,
           currentFrame : 0,
+          ftu : true,
           initialize: function() {
             View.prototype.initialize.apply(this, arguments);
             this.word = new Word().setFontSize(AppSettings.ButtonHeight/2)
@@ -16,6 +17,9 @@ define(
             this.addSubview(this.word);
           },
           onFrameIndexUpdate: function(index){
+            if(index > 0){
+              this.ftu = false;
+            }
             this.currentFrame = index + 1;
             this.updateCounter();
             this.word.jerkIt(20);
@@ -25,6 +29,10 @@ define(
             this.updateCounter();
           },
           updateCounter : function(){
+            if(this.ftu && this.totalFrames === 1){
+              this.word.setText('Hello!').setFontColor(AppSettings.ButtonColorNormalBlue).setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
+              return;
+            }
             this.word.setText(this.currentFrame+" / "+this.totalFrames)
                       .setFontColor(AppSettings.maxFrames === this.totalFrames ? AppSettings.ButtonColorNormalRed : AppSettings.ButtonColorNormalBlue)
                       .setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
