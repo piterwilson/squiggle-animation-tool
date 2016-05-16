@@ -17,6 +17,7 @@ define(
         saveAs = require("saveAs"),
         Word = squiggle.views.text.Word,
         CookieUtils = require("utils/CookieUtils"),
+        Button = squiggle.views.ui.Button,
         AnimationToolScreen = Screen.extend({
       
       /**
@@ -88,6 +89,11 @@ define(
       ftu : true,
       
       /**
+      * Button with about link
+      */
+      aboutButton : undefined,
+      
+      /**
       * Setup function
       */
       setup : function(){
@@ -122,7 +128,7 @@ define(
         this.framesView.delegate = this;
         this.addSubview(this.framesView);
         // onion skin
-        this.onionSkinView = new FrameRenderView().setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2))
+        this.onionSkinView = new FrameRenderView()
                                                  .setWidth(AppSettings.AnimationSize.width)
                                                  .setHeight(AppSettings.AnimationSize.height)
                                                  .setStrokeColor('rgba(65,189,253,0.5)')
@@ -131,7 +137,7 @@ define(
         this.addSubview(this.onionSkinView);
         
         // frame capture
-        this.captureView = new FrameCaptureView().setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2))
+        this.captureView = new FrameCaptureView()
                                                  .setWidth(AppSettings.AnimationSize.width)
                                                  .setHeight(AppSettings.AnimationSize.height);
         this.addSubview(this.captureView);
@@ -156,7 +162,6 @@ define(
         this.addSubview(this.modalView);
         // read ftu cookie
         var ftucookie = CookieUtils.getCookie('ftu');
-        console.log(ftucookie);
         if(ftucookie === undefined){
           this.ftu = true;
           this.dashBoardView.ftu = true;
@@ -187,12 +192,23 @@ define(
         this.addModelChangelistener(this.framesView, this.frameCounterView, this.dashBoardView);
         this.__broadcastModelChange();
         this.__broadcastFrameIndexUpdate();
+        // about...
+        this.aboutButton = new Button().setFontSize(8)
+                                      .setText('squiggle one v1.0')
+                                      .setShowUnderline(false)
+                                      .setFontColorForState(AppSettings.ButtonColorNormalBlue,Button.states.NORMAL)
+                                      .setFontColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER);
+        this.aboutButton.getBackgroundRectangle().hidden = true;
+        this.aboutButton.getWord().setStrokeWeight(1);
+        this.addSubview(this.aboutButton);
+        this.onScreenResize();
       },
       
       onScreenResize : function(){
         this.captureView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         this.onionSkinView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         if(this.instructionsWord) this.instructionsWord.centerOnWindow();
+        this.aboutButton.setPosition(window.innerWidth - 195,window.innerHeight - 24);
       },
       
       jerkItCallback : function(){
