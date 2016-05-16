@@ -16,6 +16,7 @@ define(
         FrameRenderView = squiggle.views.animation.FrameRender,
         saveAs = require("saveAs"),
         Word = squiggle.views.text.Word,
+        CookieUtils = require("utils/CookieUtils"),
         AnimationToolScreen = Screen.extend({
       
       /**
@@ -90,6 +91,8 @@ define(
       * Setup function
       */
       setup : function(){
+        
+        // background
         this.backgroundColor = "#EBF8FF";
         // setup app colors and other app-wide settings
         AppSettings.ButtonHeight = 80;
@@ -135,7 +138,6 @@ define(
         // frame counter view
         this.frameCounterView = new FrameCounterView();
         this.addSubview(this.frameCounterView);
-        this.frameCounterView.hidden = true;
         // create and add the dashboard
         this.dashBoardView = new DashboardView();
         this.dashBoardView.hideAllButtons = true;
@@ -152,6 +154,20 @@ define(
         // setup the modal view for messages
         this.modalView = new ModalView();
         this.addSubview(this.modalView);
+        // read ftu cookie
+        var ftucookie = CookieUtils.getCookie('ftu');
+        console.log(ftucookie);
+        if(ftucookie === undefined){
+          this.ftu = true;
+          this.dashBoardView.ftu = true;
+          this.frameCounterView.ftu = true;
+        }else{
+          this.ftu = false;
+          this.dashBoardView.ftu = false;
+          this.frameCounterView.ftu = false;
+          this.removeSubview(this.instructionsWord);
+          this.instructionsWord = undefined;
+        }
         // start animation
         var ff = new FrameModel();
         if(this.ftu){
@@ -183,7 +199,7 @@ define(
         if(!this.instructionsWord) return;
         this.instructionsTimeout = setTimeout(
           function(){
-            this.instructionsWord.jerkIt();
+            if(this.instructionsWord) this.instructionsWord.jerkIt();
             this.jerkItCallback();
           }.bind(this),
           3000
@@ -200,7 +216,7 @@ define(
         this.instructionsWord.hidden = false;
         setTimeout(
           function(){
-            this.instructionsWord.jerkIt();
+            if(this.instructionsWord) this.instructionsWord.jerkIt();
             this.jerkItCallback();
           }.bind(this),
           1000
@@ -242,12 +258,7 @@ define(
         _.each(this.__frameIndexListeners,function(listener){
           listener.onFrameIndexUpdate(this.currentFrameIndex);
         }.bind(this));
-        if(this.currentFrameIndex > 0){
-          this.onionSkinView.hidden = false;
-          this.onionSkinView.model = this.model.models[this.currentFrameIndex-1];
-        }else{
-          this.onionSkinView.hidden = true;
-        }
+        this.onionSkinView.hidden = true;
       },
       
       /**
@@ -277,10 +288,8 @@ define(
           this.model.trigger('add');
           this.setCurrentFrameIndex(this.currentFrameIndex+1);
           if(this.ftu){
-            this.showInstuctionsView();
             this.dashBoardView.showAddFrameButton = false;
             this.dashBoardView.evaluateButtonsVisibility();
-            this.ftu = false;
             f.on('change',function(){
               f.off('change');
               this.dashBoardView.showPreviewButton = true;
@@ -310,6 +319,15 @@ define(
       },
       onFrameTransitionComplete : function(){
         this.captureView.model = this.model.models[this.currentFrameIndex];
+        if(this.currentFrameIndex > 0){
+          this.onionSkinView.hidden = false;
+          this.onionSkinView.model = this.model.models[this.currentFrameIndex-1];
+        }
+        if(this.ftu && this.currentFrameIndex !== 0){
+          this.showInstuctionsView();
+          this.ftu = false;
+          CookieUtils.setCookie('ftu',false,365);
+        }
       },
       // PreviewView delegate methods
       onClosePreview : function(){
@@ -320,7 +338,6 @@ define(
         this.instructionsWord = undefined;
         this.dashBoardView.ftu = false;
         this.dashBoardView.evaluateButtonsVisibility();
-        this.frameCounterView.hidden = false;
       },
       onDownloadRequest : function(){
         this.onClosePreview();
