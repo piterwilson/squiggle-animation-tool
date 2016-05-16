@@ -46,3 +46,11 @@ requirejs.onError = function (err) {
     console.log("REQUIRE-JS: [ERROR] " , err);
     throw err;
 };
+
+window.addEventListener("beforeunload", function (e) {
+    var confirmationMessage = 'Careful! '
+                            + 'If you leave before downloading your animation,it will be lost forever!';
+
+    (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+    return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+});
