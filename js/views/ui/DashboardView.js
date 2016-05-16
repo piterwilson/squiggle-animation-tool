@@ -16,6 +16,7 @@ define(
           numFrames : 0,
           currentFrameIndex : 0,
           width : 0,
+          ftu : true,
           initialize: function() {
             View.prototype.initialize.apply(this, arguments);
             this.initProperties(
@@ -228,6 +229,7 @@ define(
             this.evaluateStateNextPrevButtons();
           },
           evaluateStateNextPrevButtons(){
+            this.addFrameButton.hidden = this.ftu;
             if(this.numFrames > 1){
               this.nextFrameButton.hidden = false;
               this.previousFrameButton.hidden = false;
@@ -245,7 +247,12 @@ define(
               this.nextFrameButton.hidden = true;
               this.previousFrameButton.hidden = true;
             }
+          },
+          setFtu : function(val){
+            this.ftu = val;
+            this.evaluateStateNextPrevButtons();
           }
+          
         });
         return DashboardView;
   }

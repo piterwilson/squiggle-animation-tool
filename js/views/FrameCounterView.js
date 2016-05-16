@@ -30,9 +30,10 @@ define(
           },
           updateCounter : function(){
             if(this.ftu && this.totalFrames === 1){
-              this.word.setText('Hello!').setFontColor(AppSettings.ButtonColorNormalBlue).setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
+              this.word.hidden = true;
               return;
             }
+            this.word.hidden = false;
             this.word.setText(this.currentFrame+" / "+this.totalFrames)
                       .setFontColor(AppSettings.maxFrames === this.totalFrames ? AppSettings.ButtonColorNormalRed : AppSettings.ButtonColorNormalBlue)
                       .setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);

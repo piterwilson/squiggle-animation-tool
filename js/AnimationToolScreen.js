@@ -14,6 +14,7 @@ define(
         AnimationRenderView = squiggle.views.animation.AnimationRender,
         FrameCaptureView = squiggle.views.animation.FrameCapture,
         saveAs = require("saveAs"),
+        Word = squiggle.views.text.Word,
         AnimationToolScreen = Screen.extend({
       
       /**
@@ -64,6 +65,12 @@ define(
       */
       previewView : undefined,
       
+      instructionsWord : undefined,
+      
+      instructionsTimeout : undefined,
+      
+      ftu : true,
+      
       /**
       * Setup function
       */
@@ -108,11 +115,22 @@ define(
         this.dashBoardView = new DashboardView();
         this.dashBoardView.setDelegate(this);
         this.addSubview(this.dashBoardView);
+        // instructions
+        this.instructionsWord = new Word().setText('Squiggle here')
+                                          .setFontSize(18)
+                                          .setFontColor(AppSettings.ButtonColorDisabled)
+                                          .centerOnWindow();
+        this.showInstuctionsView();
         // setup the modal view for messages
         this.modalView = new ModalView();
         this.addSubview(this.modalView);
         // start animation
-        this.model.add(new FrameModel());
+        var ff = new FrameModel();
+        ff.on('change',function(){
+          this.dashBoardView.setFtu(false);
+          this.model.models[0].off('change');
+        }.bind(this));
+        this.model.add(ff);
         this.model.on('add remove',function(){
           this.__broadcastModelChange();
         }.bind(this));
@@ -121,6 +139,40 @@ define(
         this.addModelChangelistener(this.framesView, this.frameCounterView, this.dashBoardView);
         this.__broadcastModelChange();
         this.__broadcastFrameIndexUpdate();
+      },
+      
+      jerkItCallback : function(){
+        this.instructionsTimeout = setTimeout(
+          function(){
+            this.instructionsWord.jerkIt();
+            this.jerkItCallback();
+          }.bind(this),
+          3000
+        );
+      },
+      
+      hideInstructionsView : function(){
+        this.instructionsWord.hidden = true;
+        clearTimeout(this.instructionsTimeout);
+      },
+      
+      showInstuctionsView : function(){
+        this.addSubview(this.instructionsWord);
+        this.instructionsWord.hidden = false;
+        setTimeout(
+          function(){
+            this.instructionsWord.jerkIt();
+            this.jerkItCallback();
+          }.bind(this),
+          1000
+        );
+      },
+      
+      mouseDragged : function(){
+        Screen.prototype.mouseDragged.apply(this,arguments);
+        if(this.captureView.isMouseInBounds()){
+          this.hideInstructionsView();
+        }
       },
       
       keyPressed : function(){
@@ -176,6 +228,10 @@ define(
           this.model.models.splice(this.currentFrameIndex + 1, 0, new FrameModel());
           this.model.trigger('add');
           this.setCurrentFrameIndex(this.currentFrameIndex+1);
+          if(this.ftu){
+            this.showInstuctionsView();
+            this.ftu = false;
+          }
         }
       },
       onRemoveFramePressed: function(){
