@@ -13,6 +13,7 @@ define(
         PreviewView = require("views/PreviewView"),
         AnimationRenderView = squiggle.views.animation.AnimationRender,
         FrameCaptureView = squiggle.views.animation.FrameCapture,
+        FrameRenderView = squiggle.views.animation.FrameRender,
         saveAs = require("saveAs"),
         Word = squiggle.views.text.Word,
         AnimationToolScreen = Screen.extend({
@@ -76,6 +77,11 @@ define(
       instructionsTimeout : undefined,
       
       /**
+      * A view that shows a guide with the contents of the previous frame
+      */
+      onionSkinView : undefined,
+      
+      /**
       * first time use flag
       */
       ftu : true,
@@ -112,6 +118,15 @@ define(
         this.framesView = new FramesView();
         this.framesView.delegate = this;
         this.addSubview(this.framesView);
+        // onion skin
+        this.onionSkinView = new FrameRenderView().setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2))
+                                                 .setWidth(AppSettings.AnimationSize.width)
+                                                 .setHeight(AppSettings.AnimationSize.height)
+                                                 .setStrokeColor('rgba(65,189,253,0.5)')
+                                                 .setStrokeWeight(4)
+                                                 .setOverrideLineStrokeProperties(true);
+        this.addSubview(this.onionSkinView);
+        
         // frame capture
         this.captureView = new FrameCaptureView().setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2))
                                                  .setWidth(AppSettings.AnimationSize.width)
@@ -159,7 +174,8 @@ define(
       },
       
       onScreenResize : function(){
-        this.captureView .setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
+        this.captureView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
+        this.onionSkinView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         if(this.instructionsWord) this.instructionsWord.centerOnWindow();
       },
       
@@ -175,7 +191,7 @@ define(
       },
       
       hideInstructionsView : function(){
-        this.instructionsWord.hidden = true;
+        if(this.instructionsWord) this.instructionsWord.hidden = true;
         clearTimeout(this.instructionsTimeout);
       },
       
@@ -226,6 +242,12 @@ define(
         _.each(this.__frameIndexListeners,function(listener){
           listener.onFrameIndexUpdate(this.currentFrameIndex);
         }.bind(this));
+        if(this.currentFrameIndex > 0){
+          this.onionSkinView.hidden = false;
+          this.onionSkinView.model = this.model.models[this.currentFrameIndex-1];
+        }else{
+          this.onionSkinView.hidden = true;
+        }
       },
       
       /**
@@ -234,8 +256,9 @@ define(
       __broadcastModelChange : function(){
         _.each(this.__modelChangeListeners,function(listener){
           listener.onModelChange(this.model);
-          this.captureView.frameRender = this.framesView.getCurrentFrameRender();
         }.bind(this));
+        this.captureView.frameRender = this.framesView.getCurrentFrameRender();
+        
       },
       
       // DashboardView delegate methods
