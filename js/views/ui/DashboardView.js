@@ -142,6 +142,18 @@ define(
             }.bind(this));
             this.enableUI();
           },
+          onScreenResize : function(){
+            var _s = AppSettings.ButtonHeight, xpos, ypos;
+            xpos = window.innerWidth/2 - 160;
+            ypos = window.innerHeight - 120;
+            this.previousFrameButton.setPosition(AppSettings.UIMargin,window.innerHeight/2 - _s/2);
+            this.nextFrameButton.setPosition(window.innerWidth - AppSettings.UIMargin - _s,window.innerHeight/2 - _s/2);
+            this.playButton.setPosition(window.innerWidth/2 - AppSettings.AnimationSize.width/2,ypos);
+            xpos += _s + _s + AppSettings.UIMargin;
+            this.removeFrameButton.setPosition(xpos, ypos);
+            xpos += _s + AppSettings.UIMargin;
+            this.addFrameButton.setPosition(xpos, ypos);
+          },
           keyPressed : function(){
             if (this.sketch.keyCode === this.sketch.LEFT_ARROW) {
               if(this.currentFrameIndex > 0) this.previousFrameButton.trigger(Button.events.CLICKED);

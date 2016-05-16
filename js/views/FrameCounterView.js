@@ -38,6 +38,9 @@ define(
                       .setFontColor(AppSettings.maxFrames === this.totalFrames ? AppSettings.ButtonColorNormalRed : AppSettings.ButtonColorNormalBlue)
                       .setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
             
+          },
+          onScreenResize : function(){
+            this.word.setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
           }
         });
         return FrameCounterView;

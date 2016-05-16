@@ -65,10 +65,19 @@ define(
       */
       previewView : undefined,
       
+      /**
+      * A Word instance with instructions for the user
+      */
       instructionsWord : undefined,
       
+      /**
+      * A Timeout to jerkIt() with the instructions word
+      */
       instructionsTimeout : undefined,
       
+      /**
+      * first time use flag
+      */
       ftu : true,
       
       /**
@@ -130,12 +139,14 @@ define(
         this.addSubview(this.modalView);
         // start animation
         var ff = new FrameModel();
-        ff.on('change',function(){
-          this.model.models[0].off('change');
-          this.dashBoardView.showAddFrameButton = true;
-          this.dashBoardView.showPreviewButton = false;
-          this.dashBoardView.evaluateButtonsVisibility();
-        }.bind(this));
+        if(this.ftu){
+          ff.on('change',function(){
+            this.model.models[0].off('change');
+            this.dashBoardView.showAddFrameButton = true;
+            this.dashBoardView.showPreviewButton = false;
+            this.dashBoardView.evaluateButtonsVisibility();
+          }.bind(this));
+        }
         this.model.add(ff);
         this.model.on('add remove',function(){
           this.__broadcastModelChange();
@@ -147,7 +158,13 @@ define(
         this.__broadcastFrameIndexUpdate();
       },
       
+      onScreenResize : function(){
+        this.captureView .setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
+        if(this.instructionsWord) this.instructionsWord.centerOnWindow();
+      },
+      
       jerkItCallback : function(){
+        if(!this.instructionsWord) return;
         this.instructionsTimeout = setTimeout(
           function(){
             this.instructionsWord.jerkIt();

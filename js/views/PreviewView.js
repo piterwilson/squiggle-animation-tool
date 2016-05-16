@@ -113,6 +113,14 @@ define(
             this.addSubview(this.downloadButton);
             this.userInteractionEnabled = true;
           },
+          onScreenResize : function(){
+            var _s = AppSettings.ButtonHeight, _m = _s/8;
+            this.curtain.setWidth(window.innerWidth).setHeight(window.innerHeight);
+            this.curtain.subviews[0].setPosition(window.innerWidth/2 - AppSettings.AnimationSize.width/2, window.innerHeight/2 - AppSettings.AnimationSize.height/2);
+            this.animationRender.setPosition(window.innerWidth/2 - AppSettings.AnimationSize.width/2, window.innerHeight/2 - AppSettings.AnimationSize.height/2);                                          
+            this.closeButton.setPosition(this.animationRender.x + AppSettings.AnimationSize.width - (_s/2), this.animationRender.y - (_s/2));
+            this.downloadButton.setPosition(this.animationRender.x + AppSettings.AnimationSize.width - (_s/2), this.closeButton.y + _s + AppSettings.UIMargin/2);
+          },
           start : function(model){
             this.animationRender.setModel(model).play();
           },

@@ -107,6 +107,13 @@ define(
             this.__centerTextMessage();    
           },
           
+          onScreenResize : function(){
+            var msgw = this.__msgWindowWidth, msgh = 400;
+            this.curtain.setWidth(window.innerWidth)
+                        .setHeight(window.innerHeight)
+                        .subviews[0].setPosition(window.innerWidth/2 - msgw/2, window.innerHeight/2 - msgh/2);
+          },
+          
           __centerTextMessage : function(){
             this.messageWord.setPosition(this.__msgWindowWidth/2 - this.messageWord.getWidth()/2, 150);
           },

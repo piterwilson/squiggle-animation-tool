@@ -52,6 +52,22 @@ define(
             }
             this.frameIndex = index;
           },
+          onScreenResize : function(){
+            _.each([0,1,2],function(i){
+              var h = window.innerHeight, w = window.innerWidth, ypos = h/2 - AppSettings.AnimationSize.height/2;
+              switch(i){
+                case 0:
+                  this.positions[i] = {x: Math.min(-AppSettings.AnimationSize.width/2, (w/2 - AppSettings.AnimationSize.width/2) - AppSettings.UIMargin - AppSettings.AnimationSize.width), y:ypos};
+                  break;
+                case 1:
+                  this.positions[i] = {x:w/2 - AppSettings.AnimationSize.width/2,y:ypos};
+                  break;
+                case 2:
+                  this.positions[i] = {x:Math.max(w - AppSettings.AnimationSize.width/2, (w/2 - AppSettings.AnimationSize.width/2) + AppSettings.UIMargin + AppSettings.AnimationSize.width),y:ypos};
+              }
+              this.backs[i].setPosition(this.positions[i].x,ypos);
+            }.bind(this));
+          },
           tweenTo:function(__x){
             if(!this.doTween){
               if(this.tween){
