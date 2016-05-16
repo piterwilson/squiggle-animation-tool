@@ -111,15 +111,19 @@ define(
         // frame counter view
         this.frameCounterView = new FrameCounterView();
         this.addSubview(this.frameCounterView);
+        this.frameCounterView.hidden = true;
         // create and add the dashboard
         this.dashBoardView = new DashboardView();
+        this.dashBoardView.hideAllButtons = true;
         this.dashBoardView.setDelegate(this);
         this.addSubview(this.dashBoardView);
         // instructions
         this.instructionsWord = new Word().setText('Squiggle here')
                                           .setFontSize(18)
                                           .setFontColor(AppSettings.ButtonColorDisabled)
+                                          .setDefaultJerkinessBumpIncrease(0.5)
                                           .centerOnWindow();
+                                          
         this.showInstuctionsView();
         // setup the modal view for messages
         this.modalView = new ModalView();
@@ -127,8 +131,10 @@ define(
         // start animation
         var ff = new FrameModel();
         ff.on('change',function(){
-          this.dashBoardView.setFtu(false);
           this.model.models[0].off('change');
+          this.dashBoardView.showAddFrameButton = true;
+          this.dashBoardView.showPreviewButton = false;
+          this.dashBoardView.evaluateButtonsVisibility();
         }.bind(this));
         this.model.add(ff);
         this.model.on('add remove',function(){
@@ -222,15 +228,24 @@ define(
         this.previewView.start(this.model);
         this.addSubview(this.previewView);
         this.captureView.hidden = true;
+        
       },
       onAddFramePressed: function(){
         if(this.model.models.length < AppSettings.maxFrames){
-          this.model.models.splice(this.currentFrameIndex + 1, 0, new FrameModel());
+          var f = new FrameModel()
+          this.model.models.splice(this.currentFrameIndex + 1, 0, f);
           this.model.trigger('add');
           this.setCurrentFrameIndex(this.currentFrameIndex+1);
           if(this.ftu){
             this.showInstuctionsView();
+            this.dashBoardView.showAddFrameButton = false;
+            this.dashBoardView.evaluateButtonsVisibility();
             this.ftu = false;
+            f.on('change',function(){
+              f.off('change');
+              this.dashBoardView.showPreviewButton = true;
+              this.dashBoardView.evaluateButtonsVisibility();
+            }.bind(this));
           }
         }
       },
@@ -261,6 +276,11 @@ define(
         this.previewView.stop();
         this.removeSubview(this.previewView);
         this.captureView.hidden = false;
+        this.removeSubview(this.instructionsWord);
+        this.instructionsWord = undefined;
+        this.dashBoardView.ftu = false;
+        this.dashBoardView.evaluateButtonsVisibility();
+        this.frameCounterView.hidden = false;
       },
       onDownloadRequest : function(){
         this.onClosePreview();

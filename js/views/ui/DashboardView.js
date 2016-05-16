@@ -16,6 +16,8 @@ define(
           numFrames : 0,
           currentFrameIndex : 0,
           width : 0,
+          showAddFrameButton : false,
+          showPreviewButton : false,
           ftu : true,
           initialize: function() {
             View.prototype.initialize.apply(this, arguments);
@@ -223,13 +225,34 @@ define(
             }else{
               this.enableAddFrameButton();
             }
+            this.evaluateButtonsVisibility();
           },
           onFrameIndexUpdate : function(index){
             this.currentFrameIndex = index;
-            this.evaluateStateNextPrevButtons();
+            this.evaluateButtonsVisibility();
           },
-          evaluateStateNextPrevButtons(){
-            this.addFrameButton.hidden = this.ftu;
+          evaluateButtonsVisibility(){
+            if(this.ftu){
+              this.addFrameButton.hidden = true;
+              this.removeFrameButton.hidden = true;
+              this.nextFrameButton.hidden = true;
+              this.previousFrameButton.hidden = true;
+              this.playButton.hidden = true;
+              if(this.showAddFrameButton){
+                this.addFrameButton.hidden = false;
+              }
+              if(this.showPreviewButton){
+                this.playButton.hidden = false;
+              }
+              return;
+            }else{
+              this.addFrameButton.hidden = false;
+              this.removeFrameButton.hidden = false;
+              this.nextFrameButton.hidden = false;
+              this.previousFrameButton.hidden = false;
+              this.playButton.hidden = false;
+            }
+            this.addFrameButton.hidden = false;
             if(this.numFrames > 1){
               this.nextFrameButton.hidden = false;
               this.previousFrameButton.hidden = false;
@@ -247,12 +270,8 @@ define(
               this.nextFrameButton.hidden = true;
               this.previousFrameButton.hidden = true;
             }
-          },
-          setFtu : function(val){
-            this.ftu = val;
-            this.evaluateStateNextPrevButtons();
           }
-          
+
         });
         return DashboardView;
   }
