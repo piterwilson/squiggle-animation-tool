@@ -18,6 +18,7 @@ define(
         Word = squiggle.views.text.Word,
         CookieUtils = require("utils/CookieUtils"),
         Button = squiggle.views.ui.Button,
+        AboutView = require("views/AboutView"),
         AnimationToolScreen = Screen.extend({
       
       /**
@@ -94,6 +95,11 @@ define(
       aboutButton : undefined,
       
       /**
+      * View with 'about' information
+      */
+      aboutView : undefined,
+      
+      /**
       * Setup function
       */
       setup : function(){
@@ -105,7 +111,7 @@ define(
         AppSettings.UIMargin = 40;
         // disabled button color
         AppSettings.ButtonColorDisabled = "#CCCCCC";
-        AppSettings.DarkBlueColor = "rgba(65,189,253,0.75)";
+        AppSettings.DarkBlueColor = "rgba(65,189,253,0.85)";
         // blue buttons
         AppSettings.ButtonColorNormalBlue = "#41BDFD";
         AppSettings.ButtonColorHoverBlue = "#50A9D9";
@@ -181,6 +187,11 @@ define(
             this.dashBoardView.showAddFrameButton = true;
             this.dashBoardView.showPreviewButton = false;
             this.dashBoardView.evaluateButtonsVisibility();
+            window.clean = false;
+          }.bind(this));
+        }else{
+          ff.on('change',function(){
+            window.clean = false;
           }.bind(this));
         }
         this.model.add(ff);
@@ -192,16 +203,23 @@ define(
         this.addModelChangelistener(this.framesView, this.frameCounterView, this.dashBoardView);
         this.__broadcastModelChange();
         this.__broadcastFrameIndexUpdate();
-        // about...
+        // about SQUIGGLE ONE...
+        this.aboutView = new AboutView();
         this.aboutButton = new Button().setFontSize(8)
                                       .setText('squiggle one v1.0')
                                       .setShowUnderline(false)
                                       .setFontColorForState(AppSettings.ButtonColorNormalBlue,Button.states.NORMAL)
-                                      .setFontColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER);
+                                      .setFontColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER)
+                                      .on(Button.events.CLICKED,function(){
+                                        this.aboutButton.jerkIt();
+                                        this.addSubview(this.aboutView);
+                                        this.aboutView.slideIn();
+                                      }.bind(this));
         this.aboutButton.getBackgroundRectangle().hidden = true;
         this.aboutButton.getWord().setStrokeWeight(1);
         this.addSubview(this.aboutButton);
         this.onScreenResize();
+        window.clean = true;
       },
       
       onScreenResize : function(){
@@ -283,6 +301,7 @@ define(
       __broadcastModelChange : function(){
         _.each(this.__modelChangeListeners,function(listener){
           listener.onModelChange(this.model);
+          window.clean = false;
         }.bind(this));
         this.captureView.frameRender = this.framesView.getCurrentFrameRender();
         
@@ -310,6 +329,11 @@ define(
               f.off('change');
               this.dashBoardView.showPreviewButton = true;
               this.dashBoardView.evaluateButtonsVisibility();
+            }.bind(this));
+          }else{
+            f.on('change',function(){
+              f.off('change');
+              window.clean = false;
             }.bind(this));
           }
         }
@@ -369,6 +393,7 @@ define(
                                                   saveAs(blob,'animation.gif');
                                                   //window.open(URL.createObjectURL(blob));
                                                 }.bind(this));
+        window.clean = true;
       }
     });
     return AnimationToolScreen;

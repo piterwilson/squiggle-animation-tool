@@ -5,7 +5,6 @@ require.config({
         backbone: 'vendor/backbone-min',
 				p5 : "vendor/p5.min",
 				squiggle: 'squiggle',
-				randomColor : "vendor/randomColor.min",
 				Tween : "vendor/Tween",
 				saveAs : "vendor/FileSaver.min"
     },
@@ -48,6 +47,7 @@ requirejs.onError = function (err) {
 };
 
 window.addEventListener("beforeunload", function (e) {
+		if(window.clean) return;
     var confirmationMessage = 'Careful! '
                             + 'If you leave before downloading your animation,it will be lost forever!';
 
