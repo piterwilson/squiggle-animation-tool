@@ -169,6 +169,7 @@ define(
           },
           disableButton : function(button){
             button.userInteractionEnabled = false;
+            button.state = Button.states.NORMAL;
             button.setBackgroundColorForState(AppSettings.ButtonColorDisabled,Button.states.NORMAL);
           },
           enablePreviousFrameButton(){

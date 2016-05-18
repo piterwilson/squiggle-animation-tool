@@ -54,3 +54,7 @@ window.addEventListener("beforeunload", function (e) {
     (e || window.event).returnValue = confirmationMessage; //Gecko + IE
     return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
 });
+
+document.ontouchmove = function(event){
+    event.preventDefault();
+}

@@ -162,7 +162,6 @@ define(
             window.requestAnimationFrame(this.update.bind(this));
           },
           update : function(){
-            console.log('update');
             if(this.doTween){
               TWEEN.update();
               window.requestAnimationFrame(this.update.bind(this));
