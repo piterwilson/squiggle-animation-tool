@@ -142,7 +142,7 @@ define(
             }.bind(this));
             this.enableUI();
           },
-          onScreenResize : function(){
+          windowResized : function(){
             var _s = AppSettings.ButtonHeight, xpos, ypos;
             xpos = window.innerWidth/2 - 160;
             ypos = window.innerHeight - 120;
@@ -279,7 +279,9 @@ define(
               }else{
                 this.enablePreviousFrameButton();
               }
+              this.enableRemoveFrameButton();
             }else{
+              this.disableRemoveFrameButton();
               this.nextFrameButton.hidden = true;
               this.previousFrameButton.hidden = true;
             }

@@ -107,7 +107,7 @@ define(
             this.__centerTextMessage();    
           },
           
-          onScreenResize : function(){
+          windowResized : function(){
             var msgw = this.__msgWindowWidth, msgh = 400;
             this.curtain.setWidth(window.innerWidth)
                         .setHeight(window.innerHeight)

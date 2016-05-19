@@ -18,7 +18,6 @@ define(
         Word = squiggle.views.text.Word,
         CookieUtils = require("utils/CookieUtils"),
         Button = squiggle.views.ui.Button,
-        AboutView = require("views/AboutView"),
         AnimationToolScreen = Screen.extend({
       
       /**
@@ -93,11 +92,6 @@ define(
       * Button with about link
       */
       aboutButton : undefined,
-      
-      /**
-      * View with 'about' information
-      */
-      aboutView : undefined,
       
       /**
       * Setup function
@@ -204,25 +198,23 @@ define(
         this.__broadcastModelChange();
         this.__broadcastFrameIndexUpdate();
         // about SQUIGGLE ONE...
-        this.aboutView = new AboutView();
         this.aboutButton = new Button().setFontSize(8)
                                       .setText('squiggle one v1.0')
                                       .setShowUnderline(false)
                                       .setFontColorForState(AppSettings.ButtonColorNormalBlue,Button.states.NORMAL)
                                       .setFontColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER)
                                       .on(Button.events.CLICKED,function(){
-                                        this.aboutButton.jerkIt();
-                                        this.addSubview(this.aboutView);
-                                        this.aboutView.slideIn();
+                                        window.open("/about", "_blank");
                                       }.bind(this));
         this.aboutButton.getBackgroundRectangle().hidden = true;
         this.aboutButton.getWord().setStrokeWeight(1);
         this.addSubview(this.aboutButton);
-        this.onScreenResize();
+        this.windowResized();
         window.clean = true;
       },
       
-      onScreenResize : function(){
+      windowResized : function(){
+        Screen.prototype.windowResized.apply(this,arguments);
         this.captureView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         this.onionSkinView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         if(this.instructionsWord) this.instructionsWord.centerOnWindow();

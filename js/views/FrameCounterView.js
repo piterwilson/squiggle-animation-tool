@@ -39,7 +39,7 @@ define(
                       .setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
             
           },
-          onScreenResize : function(){
+          windowResized : function(){
             this.word.setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
           }
         });

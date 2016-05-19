@@ -113,7 +113,7 @@ define(
             this.addSubview(this.downloadButton);
             this.userInteractionEnabled = true;
           },
-          onScreenResize : function(){
+          windowResized : function(){
             var _s = AppSettings.ButtonHeight, _m = _s/8;
             this.curtain.setWidth(window.innerWidth).setHeight(window.innerHeight);
             this.curtain.subviews[0].setPosition(window.innerWidth/2 - AppSettings.AnimationSize.width/2, window.innerHeight/2 - AppSettings.AnimationSize.height/2);

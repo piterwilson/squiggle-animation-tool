@@ -52,7 +52,7 @@ define(
             }
             this.frameIndex = index;
           },
-          onScreenResize : function(){
+          windowResized : function(){
             _.each([0,1,2],function(i){
               var h = window.innerHeight, w = window.innerWidth, ypos = h/2 - AppSettings.AnimationSize.height/2;
               switch(i){
