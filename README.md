@@ -3,6 +3,10 @@ Open source animation educational software.
 
 *Frame by frame, day per day.*
 
+### Demo
+
+See it in action at http://www.mrsquiggles.com/squiggle-1
+
 ### Description
 
 Squiggle 1 is an animation educational software aimed at beginner animation students and their teachers. 
