@@ -375,8 +375,8 @@ define(
         this.onClosePreview();
         this.modalView.showProgress('Making a .gif');
         var renderer = new AnimationRenderView().setModel(this.model)
-                                                .setWidth(AppSettings.AnimationSize.width)
-                                                .setHeight(AppSettings.AnimationSize.height)
+                                                .setWidth(AppSettings.AnimationSize.width*window.devicePixelRatio)
+                                                .setHeight(AppSettings.AnimationSize.height*window.devicePixelRatio)
                                                 .setWorkerScript('js/vendor/gif.worker.js')
                                                 .setExportFrameDelay(100)
                                                 .export(function(blob){
