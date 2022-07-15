@@ -30,5 +30,5 @@ Squiggle 1 requires:
 
 ### Credits
 
-Squiggle 1 by [mr squiggles](http://www.mrsquiggles.com/about)
+Created by Juan Carlos Ospina Gonzalez
 
