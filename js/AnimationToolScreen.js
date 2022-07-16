@@ -202,10 +202,7 @@ define(
                                       .setText('squiggle one v1.0')
                                       .setShowUnderline(false)
                                       .setFontColorForState(AppSettings.ButtonColorNormalBlue,Button.states.NORMAL)
-                                      .setFontColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER)
-                                      .on(Button.events.CLICKED,function(){
-                                        window.open("/about", "_blank");
-                                      }.bind(this));
+                                      .setFontColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER);
         this.aboutButton.getBackgroundRectangle().hidden = true;
         this.aboutButton.getWord().setStrokeWeight(1);
         this.addSubview(this.aboutButton);
