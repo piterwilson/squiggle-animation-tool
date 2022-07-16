@@ -200,10 +200,14 @@ define(
         this.__broadcastFrameIndexUpdate();
         // about SQUIGGLE ONE...
         this.aboutButton = new Button().setFontSize(8)
-                                      .setText('squiggle one v1.0')
+                                      .setText('squiggle one v1.1')
                                       .setShowUnderline(false)
                                       .setFontColorForState(AppSettings.ButtonColorNormalBlue,Button.states.NORMAL)
-                                      .setFontColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER);
+                                      .setFontColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER)
+                                      .on(Button.events.CLICKED,function(){
+                                        window.open("https://github.com/piterwilson/squiggle-animation-tool", "_blank");
+                                      }.bind(this));
+
         this.aboutButton.getBackgroundRectangle().hidden = true;
         this.aboutButton.getWord().setStrokeWeight(1);
         this.addSubview(this.aboutButton);
@@ -216,7 +220,7 @@ define(
         this.captureView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         this.onionSkinView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         if(this.instructionsWord) this.instructionsWord.centerOnWindow();
-        this.aboutButton.setPosition(window.innerWidth - 195,window.innerHeight - 24);
+        this.aboutButton.setPosition(window.innerWidth - 215,window.innerHeight - 44);
       },
       
       jerkItCallback : function(){
