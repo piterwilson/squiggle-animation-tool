@@ -34,11 +34,6 @@ function windowLoaded(callback){
 
 windowLoaded(function() {
   require(["squiggle","AnimationToolScreen"], function (squiggle, AnimationToolScreen) {
-		if(window.innerWidth < 760){
-			window.clean = true;
-			window.location.replace("/small-screen/");
-			return;
-		}
 		$('#splash').remove();
 		squiggle.init();
 		var screen = new AnimationToolScreen();
