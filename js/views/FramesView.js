@@ -1,6 +1,7 @@
 define(
   function(require, exports, module) {
     var squiggle = require("squiggle"),
+        _ = require("underscore"),
         View = squiggle.views.View,
         RectangleView = squiggle.views.primitives.Rectangle,
         FrameRenderView = squiggle.views.animation.FrameRender,

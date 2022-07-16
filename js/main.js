@@ -1,7 +1,7 @@
 require.config({
 		paths: {
         jquery: 'vendor/jquery-2.2.3.min',
-        underscore: 'vendor/underscore-min',
+        underscore: 'vendor/underscore-umd-min',
         backbone: 'vendor/backbone-min',
 				p5 : "vendor/p5.min",
 				squiggle: 'squiggle',
@@ -33,7 +33,7 @@ function windowLoaded(callback){
 }
 
 windowLoaded(function() {
-  require(["squiggle","AnimationToolScreen"], function (squiggle, AnimationToolScreen) {
+  require(["squiggle","AnimationToolScreen","underscore"], function (squiggle, AnimationToolScreen) {
 		$('#splash').remove();
 		squiggle.init();
 		var screen = new AnimationToolScreen();

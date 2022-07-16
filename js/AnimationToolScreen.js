@@ -1,6 +1,7 @@
 define(
   function(require, exports, module) {
     var squiggle = require("squiggle"),
+        _ = require("underscore"),
         DashboardView = require("views/ui/DashboardView"),
         Screen = squiggle.views.screens.Screen,
         AnimationModel = squiggle.models.Animation,
