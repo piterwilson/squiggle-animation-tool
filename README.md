@@ -28,6 +28,10 @@ Squiggle 1 requires:
 * Underscore
 * Backbone
 
+### People using Squiggle 1
+
+* Schooltools.at (https://schooltools.at/)
+
 ### Credits
 
 Created by Juan Carlos Ospina Gonzalez
