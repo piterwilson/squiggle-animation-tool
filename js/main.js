@@ -1,6 +1,6 @@
 require.config({
 		paths: {
-        jquery: 'vendor/jquery-2.2.3.min',
+        jquery: 'vendor/jquery-3.6.4.slim.min',
         underscore: 'vendor/underscore-umd-min',
         backbone: 'vendor/backbone-min',
 				p5 : "vendor/p5.min",
