@@ -34,7 +34,6 @@ function windowLoaded(callback){
 
 windowLoaded(function() {
   require(["squiggle","AnimationToolScreen","underscore"], function (squiggle, AnimationToolScreen) {
-		$('#splash').remove();
 		squiggle.init();
 		var screen = new AnimationToolScreen();
 		squiggle.screen = screen;
