@@ -62,7 +62,7 @@ define(
                             .setFontColorForState('White',Button.states.NORMAL)
                             .setFontColorForState('White',Button.states.HOVER)
                             .setFontColorForState('White',Button.states.DOWN)
-                            .setFontSize(40)
+                            .setFontSize(_s / 2)
                             .on(Button.events.CLICKED,function(){
                               this.closeButton.jerkIt({
                                 amount:10,

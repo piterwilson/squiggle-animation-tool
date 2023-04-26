@@ -40,7 +40,10 @@ define(
             
           },
           windowResized : function(){
-            this.word.setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
+            this.word.setPosition(
+              window.innerWidth/2 - this.word.getWidth()/2,
+              window.innerHeight/2 - AppSettings.AnimationSize.height/2 - AppSettings.ButtonHeight/2 - AppSettings.UIMargin
+            );
           }
         });
         return FrameCounterView;

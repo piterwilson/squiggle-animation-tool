@@ -87,7 +87,7 @@ define(
             b1.addSubview(t);
             this.addSubview(b1);
             this.playButton = b1;
-            xpos += _s + _s + AppSettings.UIMargin;
+            xpos = window.innerWidth - (2 * _s) - AppSettings.UIMargin;
             b2 = new Button().setText('')
                             .setWidth(_s)
                             .setHeight(_s)
@@ -144,12 +144,12 @@ define(
           },
           windowResized : function(){
             var _s = AppSettings.ButtonHeight, xpos, ypos;
-            xpos = window.innerWidth/2 - 160;
-            ypos = window.innerHeight - 120;
+            xpos = AppSettings.AnimationSize.width/2 - window.innerWidth/2;
+            ypos =window.innerHeight/2 - AppSettings.AnimationSize.height/2 + AppSettings.AnimationSize.height + AppSettings.UIMargin;
             this.previousFrameButton.setPosition(AppSettings.UIMargin,window.innerHeight/2 - _s/2);
             this.nextFrameButton.setPosition(window.innerWidth - AppSettings.UIMargin - _s,window.innerHeight/2 - _s/2);
             this.playButton.setPosition(window.innerWidth/2 - AppSettings.AnimationSize.width/2,ypos);
-            xpos += _s + _s + AppSettings.UIMargin;
+            xpos = window.innerWidth/2 - AppSettings.AnimationSize.width/2 + AppSettings.AnimationSize.width - (_s * 2) - AppSettings.UIMargin;
             this.removeFrameButton.setPosition(xpos, ypos);
             xpos += _s + AppSettings.UIMargin;
             this.addFrameButton.setPosition(xpos, ypos);

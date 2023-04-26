@@ -102,8 +102,8 @@ define(
         // background
         this.backgroundColor = "#EBF8FF";
         // setup app colors and other app-wide settings
-        AppSettings.ButtonHeight = 80;
-        AppSettings.UIMargin = 40;
+        AppSettings.ButtonHeight = 60;
+        AppSettings.UIMargin = 20;
         // disabled button color
         AppSettings.ButtonColorDisabled = "#CCCCCC";
         AppSettings.DarkBlueColor = "rgba(65,189,253,0.85)";
@@ -120,7 +120,19 @@ define(
         AppSettings.ButtonColorHoverGreen = "#50D974";
         AppSettings.ButtonColorDownGreen = "#2A703C";
         // size for the animation frames
-        AppSettings.AnimationSize = {width:480,height:320};
+        var w, h;
+        if (window.innerWidth > window.innerHeight) {
+          w = window.innerWidth - 300;
+          h = (w / 16) * 9;
+        }
+        else {
+          w = window.innerWidth - 60;
+          h = (w / 3) * 4;
+        }
+        AppSettings.AnimationSize = {
+          width: w,
+          height: h
+        };
         // max amount of frames allowed
         AppSettings.maxFrames = 50;
         
@@ -220,7 +232,7 @@ define(
         this.captureView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         this.onionSkinView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         if(this.instructionsWord) this.instructionsWord.centerOnWindow();
-        this.aboutButton.setPosition(window.innerWidth - 215,window.innerHeight - 44);
+        this.aboutButton.setPosition(window.innerWidth - 200,window.innerHeight - 20);
       },
       
       jerkItCallback : function(){
@@ -252,6 +264,13 @@ define(
       },
       
       mouseDragged : function(){
+        Screen.prototype.mouseDragged.apply(this,arguments);
+        if(this.captureView.isMouseInBounds()){
+          this.hideInstructionsView();
+        }
+      },
+
+      touchMoved: function() {
         Screen.prototype.mouseDragged.apply(this,arguments);
         if(this.captureView.isMouseInBounds()){
           this.hideInstructionsView();
