@@ -4,7 +4,9 @@
   "description": "Open source animation educational software",
   "main": "js/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "node-sass --include-path scss scss/styles.scss css/styles.min.css",
+    "watch-css": "nodemon -e scss -x \"npm run build-css\""
   },
   "repository": {
     "type": "git",
@@ -20,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/piterwilson/squiggle-animation-tool/issues"
   },
-  "homepage": "https://github.com/piterwilson/squiggle-animation-tool#readme"
+  "homepage": "https://github.com/piterwilson/squiggle-animation-tool#readme",
+  "devDependencies": {
+    "node-sass": "^8.0.0",
+    "nodemon": "^2.0.22"
+  }
 }
