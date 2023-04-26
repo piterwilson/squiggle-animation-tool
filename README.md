@@ -32,6 +32,14 @@ Squiggle 1 requires:
 
 * Schooltools.at (https://schooltools.at/)
 
+### Developing
+Run `npm install` to install dependencies.
+
+#### Sass compile
+Run `npm run build-css` to watch the sass file and auto compile css.
+
+Run `npm run watch-css` to watch the sass file and auto compile css.
+
 ### Credits
 
 Created by Juan Carlos Ospina Gonzalez
