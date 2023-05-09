@@ -9,6 +9,17 @@ Squiggle 1 is an animation educational software aimed at beginner animation stud
 
 It is a simple exploratory experiment of the phi phenomenon.
 
+### Docker
+Create container:
+```
+docker build -t html-server-image:v1
+```
+
+Run
+```
+docker run -d -p 80:80 html-server-image:v1
+```
+
 ### Troubles
 
 * My animation won't download. What's happening?
