@@ -90,11 +90,6 @@ define(
       ftu : true,
       
       /**
-      * Button with about link
-      */
-      aboutButton : undefined,
-      
-      /**
       * Setup function
       */
       setup : function(){
@@ -120,18 +115,11 @@ define(
         AppSettings.ButtonColorHoverGreen = "#50D974";
         AppSettings.ButtonColorDownGreen = "#2A703C";
         // size for the animation frames
-        var w, h;
-        if (window.innerWidth > window.innerHeight) {
-          w = window.innerWidth - 300;
-          h = (w / 16) * 9;
-        }
-        else {
-          w = window.innerWidth - 60;
-          h = (w / 3) * 4;
-        }
+        var size = this.getAnimationSize(window.innerWidth, window.innerHeight);
+        console.log(size);
         AppSettings.AnimationSize = {
-          width: w,
-          height: h
+          width: size.width,
+          height: size.height
         };
         // max amount of frames allowed
         AppSettings.maxFrames = 50;
@@ -206,23 +194,19 @@ define(
           this.__broadcastModelChange();
         }.bind(this));
         // add listeners
-        this.addFrameIndexChangeListener(this.framesView, this.frameCounterView, this.dashBoardView);
-        this.addModelChangelistener(this.framesView, this.frameCounterView, this.dashBoardView);
+        this.addFrameIndexChangeListener(
+          this.framesView, 
+          this.frameCounterView, 
+          this.dashBoardView
+        );
+        this.addModelChangelistener(
+          this.framesView, 
+          this.frameCounterView, 
+          this.dashBoardView
+        );
         this.__broadcastModelChange();
         this.__broadcastFrameIndexUpdate();
-        // about SQUIGGLE ONE...
-        this.aboutButton = new Button().setFontSize(8)
-                                      .setText('squiggle one v1.1')
-                                      .setShowUnderline(false)
-                                      .setFontColorForState(AppSettings.ButtonColorNormalBlue,Button.states.NORMAL)
-                                      .setFontColorForState(AppSettings.ButtonColorHoverBlue,Button.states.HOVER)
-                                      .on(Button.events.CLICKED,function(){
-                                        window.open("https://github.com/piterwilson/squiggle-animation-tool", "_blank");
-                                      }.bind(this));
-
-        this.aboutButton.getBackgroundRectangle().hidden = true;
-        this.aboutButton.getWord().setStrokeWeight(1);
-        this.addSubview(this.aboutButton);
+    
         this.windowResized();
         window.clean = true;
       },
@@ -232,7 +216,40 @@ define(
         this.captureView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         this.onionSkinView.setPosition((window.innerWidth/2) - (AppSettings.AnimationSize.width/2), (window.innerHeight/2) - (AppSettings.AnimationSize.height/2));
         if(this.instructionsWord) this.instructionsWord.centerOnWindow();
-        this.aboutButton.setPosition(window.innerWidth - 200,window.innerHeight - 20);
+      },
+
+      getAnimationSize: function(screenWidth, screenHeight) {
+        var screenSize = { width: screenWidth, height: screenHeight };
+        var isLandscape = screenWidth > screenHeight;
+        var sizesLandscape = [
+          { width: 800, height: 600 },
+          { width: 640, height: 480 },
+          { width: 320, height: 240 }
+        ];
+        var sizesPortrait = [
+          { width: 600, height: 800 },
+          { width: 240, height: 320 },
+          { width: 480, height: 640 }
+        ];
+        if (isLandscape) {
+          sizes = sizesLandscape;
+        }
+        else {
+          sizes = sizesPortrait;
+        }
+        var found = true;
+        var i = 0;
+        var size = sizes[i];
+        do {
+          if (size.width > screenSize.width || size.height > screen.height) {
+            i += 1;
+            size = sizes[i];
+          }
+          else {
+            found = false;
+          }
+        } while (found)
+        return size;
       },
       
       jerkItCallback : function(){
@@ -317,7 +334,6 @@ define(
           window.clean = false;
         }.bind(this));
         this.captureView.frameRender = this.framesView.getCurrentFrameRender();
-        
       },
       
       // DashboardView delegate methods
@@ -327,7 +343,6 @@ define(
         this.previewView.start(this.model);
         this.addSubview(this.previewView);
         this.captureView.hidden = true;
-        
       },
       onAddFramePressed: function(){
         if(this.model.models.length < AppSettings.maxFrames){
@@ -351,6 +366,7 @@ define(
           }
         }
       },
+
       onRemoveFramePressed: function(){
         if(this.model.models.length > 1){
           this.modalView.showMessage("delete frame?","yes","no",function(){
@@ -364,12 +380,15 @@ define(
           }.bind(this));
         }
       },
+
       onNextFramePressed : function(){
         if(this.currentFrameIndex < this.model.models.length - 1) this.setCurrentFrameIndex(this.currentFrameIndex + 1);
       },
+
       onPreviousFramePressed : function(){
         if(this.currentFrameIndex > 0) this.setCurrentFrameIndex(this.currentFrameIndex - 1);
       },
+
       onFrameTransitionComplete : function(){
         this.captureView.model = this.model.models[this.currentFrameIndex];
         if(this.currentFrameIndex > 0){
@@ -382,6 +401,7 @@ define(
           CookieUtils.setCookie('ftu',false,365);
         }
       },
+
       // PreviewView delegate methods
       onClosePreview : function(){
         this.previewView.stop();
@@ -392,6 +412,7 @@ define(
         this.dashBoardView.ftu = false;
         this.dashBoardView.evaluateButtonsVisibility();
       },
+
       onDownloadRequest : function(){
         this.onClosePreview();
         this.modalView.showProgress('Making a .gif');
