@@ -52,17 +52,14 @@ define(
             this.animationRender = new AnimationRenderView().setPosition(window.innerWidth/2 - AppSettings.AnimationSize.width/2, window.innerHeight/2 - AppSettings.AnimationSize.height/2)
                                                             .setFrameDelay(3);
             this.addSubview(this.animationRender);
-            this.closeButton = new Button().setText('x')
+            this.closeButton = new Button()
+                            .setText('')
                             .setWidth(_s)
                             .setHeight(_s)
                             .setPosition(this.animationRender.x + AppSettings.AnimationSize.width - (_s/2), this.animationRender.y - (_s/2))
                             .setBackgroundColorForState(AppSettings.ButtonColorNormalRed,Button.states.NORMAL)
                             .setBackgroundColorForState(AppSettings.ButtonColorHoverRed,Button.states.HOVER)
                             .setBackgroundColorForState(AppSettings.ButtonColorDownRed,Button.states.DOWN)
-                            .setFontColorForState('White',Button.states.NORMAL)
-                            .setFontColorForState('White',Button.states.HOVER)
-                            .setFontColorForState('White',Button.states.DOWN)
-                            .setFontSize(_s / 2)
                             .on(Button.events.CLICKED,function(){
                               this.closeButton.jerkIt({
                                 amount:10,
@@ -93,8 +90,23 @@ define(
                                 }.bind(this)
                               });
                             }.bind(this));
+
+            DownloadPath = new Path().setStrokeWeight(_s/6)
+                          .setStrokeColor('White')
+                          .addPoint(_m*2, _m*2)
+                          .addPoint(_m*6, _m*6)
+                          .setFill(false)
+                          .setClosed(false);
+            this.closeButton.addSubview(DownloadPath);
+            DownloadPath = new Path().setStrokeWeight(_s/6)
+                          .setStrokeColor('White')
+                          .addPoint(_m*6, _m*2)
+                          .addPoint(_m*2, _m*6)
+                          .setFill(false)
+                          .setClosed(false);
+            this.closeButton.addSubview(DownloadPath);
+
             this.downloadButton.getBackgroundRectangle().setRoundedCorners(_s);
-            
             DownloadPath = new Path().setStrokeWeight(_s/6)
                                          .setStrokeColor('White')
                                          .addPoint(_m*2, _m*4)

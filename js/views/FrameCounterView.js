@@ -36,8 +36,7 @@ define(
             this.word.hidden = false;
             this.word.setText(this.currentFrame+" / "+this.totalFrames)
                       .setFontColor(AppSettings.maxFrames === this.totalFrames ? AppSettings.ButtonColorNormalRed : AppSettings.ButtonColorNormalBlue)
-                      .setPosition(window.innerWidth/2 - this.word.getWidth()/2,AppSettings.UIMargin * 1.5);
-            
+            this.windowResized();
           },
           windowResized : function(){
             this.word.setPosition(

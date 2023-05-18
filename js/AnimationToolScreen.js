@@ -97,8 +97,8 @@ define(
         // background
         this.backgroundColor = "#EBF8FF";
         // setup app colors and other app-wide settings
-        AppSettings.ButtonHeight = 60;
-        AppSettings.UIMargin = 20;
+        AppSettings.ButtonHeight = 50;
+        AppSettings.UIMargin = 10;
         // disabled button color
         AppSettings.ButtonColorDisabled = "#CCCCCC";
         AppSettings.DarkBlueColor = "rgba(65,189,253,0.85)";
@@ -116,7 +116,6 @@ define(
         AppSettings.ButtonColorDownGreen = "#2A703C";
         // size for the animation frames
         var size = this.getAnimationSize(window.innerWidth, window.innerHeight);
-        console.log(size);
         AppSettings.AnimationSize = {
           width: size.width,
           height: size.height
@@ -221,6 +220,7 @@ define(
       getAnimationSize: function(screenWidth, screenHeight) {
         var screenSize = { width: screenWidth, height: screenHeight };
         var isLandscape = screenWidth > screenHeight;
+        var interfaceHeight = 250;
         var sizesLandscape = [
           { width: 800, height: 600 },
           { width: 640, height: 480 },
@@ -231,24 +231,30 @@ define(
           { width: 240, height: 320 },
           { width: 480, height: 640 }
         ];
+        var minimumSize = {
+          width: screenSize.width,
+          height: screen.height -interfaceHeight
+        }
         if (isLandscape) {
           sizes = sizesLandscape;
         }
         else {
           sizes = sizesPortrait;
         }
-        var found = true;
+        var searching = true;
         var i = 0;
         var size = sizes[i];
         do {
-          if (size.width > screenSize.width || size.height > screen.height) {
+          console.log("min is: " + minimumSize.width + "x" + minimumSize.height);
+          console.log("proposed is: " + size.width + "x" + size.height);
+          if (size.width > minimumSize.width || size.height > minimumSize.height) {
             i += 1;
             size = sizes[i];
           }
           else {
-            found = false;
+            searching = false;
           }
-        } while (found)
+        } while (searching)
         return size;
       },
       
